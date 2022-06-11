@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace SortFolderBySize
 {
+
     class Program
     {
         private static string desktopIniName = "desktop.ini";
-        private static string RootPath = @"";
+        private static string RootPath = @"D:\Things to backup monthly\test";
         private static string Line1 = "[.ShellClassInfo]";
         private static string Line2 = "[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]";
         private static string Line3 = "Prop5=31,FolderTag";
@@ -17,6 +19,9 @@ namespace SortFolderBySize
 
 
         private static Dictionary<string, long> DirectoriesDictionary = new Dictionary<string, long>();
+       
+
+
 
         static void Main(string[] args)
         {
@@ -33,8 +38,8 @@ namespace SortFolderBySize
             Random random = new Random();
             foreach (var dic in DirectoriesDictionary)
             {
-                DeleteDesktopIniFile(dic.Key);
-                //CreateDesktopIniFile(dic.Key, random.Next(0, 1000000));
+                //DeleteDesktopIniFile(dic.Key);
+                CreateDesktopIniFile(dic.Key, random.Next(0, 1000000));
                 Console.WriteLine(dic.Key + " " + dic.Value);
             }
             Console.WriteLine($"Elapsed time:{elapsedTime/1000} seconds");
@@ -77,21 +82,31 @@ namespace SortFolderBySize
                 stream.WriteLine(Line3.Replace("FolderTag", size.ToString()));
                 stream.WriteLine(MagicCommentForCreatedFiles);
             }
+            File.SetAttributes(folder, FileAttributes.ReadOnly);
         }
 
         private static void DeleteDesktopIniFile(string folder)
         {
             var fileShouldBeDeleted = false;
             string filePath = folder + "/" + desktopIniName;
-            using (var reader = new StreamReader(filePath))
+            if(File.Exists(filePath))
             {
-                string contents = reader.ReadToEnd();
-                if (contents.Contains(MagicCommentForCreatedFiles)) fileShouldBeDeleted = true;
-                else if (contents.Contains(MagicCommentForAppendedFiles)) ;
-            }
+                using (var reader = new StreamReader(filePath))
+                {
+                    string contents = reader.ReadToEnd();
+                    if (contents.Contains(MagicCommentForCreatedFiles)) fileShouldBeDeleted = true;
+                    else if (contents.Contains(MagicCommentForAppendedFiles)) ;
+                }
 
-            if(fileShouldBeDeleted) File.Delete(filePath);
+                if (fileShouldBeDeleted)
+                {
+                    File.SetAttributes(folder, FileAttributes.Normal);
+                    File.Delete(filePath);
+                }
+            }
         }
+
+
     }
 }
 
