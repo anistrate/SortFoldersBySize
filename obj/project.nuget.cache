@@ -1,8 +1,25 @@
 {
   "version": 2,
-  "dgSpecHash": "xzSm73U6tLNUy7RxDA9SaXPqRfz92eLXpRhCph9k/nytELS/mO6DZZLT0RC+AvCgeErNe+fav1oPsbJVlR57xw==",
+  "dgSpecHash": "Jl/f6+aZ2lVMpK762rTLgNj08dMl7U9BRug8CWAfM2cM+8pYxRRgx9EM7Uiq7rr4/zQUD/DnFXWaI5ou/ABjeg==",
   "success": true,
   "projectFilePath": "D:\\Things to backup monthly\\Github\\SortFoldersBySize\\SortFoldersBySize\\SortFoldersBySize.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\ist_a\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\system.security.accesscontrol\\5.0.0\\system.security.accesscontrol.5.0.0.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.core\\3.4.2\\vanara.core.3.4.2.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.comctl32\\3.4.2\\vanara.pinvoke.comctl32.3.4.2.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.cryptography\\3.4.2\\vanara.pinvoke.cryptography.3.4.2.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.gdi32\\3.4.2\\vanara.pinvoke.gdi32.3.4.2.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.kernel32\\3.4.2\\vanara.pinvoke.kernel32.3.4.2.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.ole\\3.4.2\\vanara.pinvoke.ole.3.4.2.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.rpc\\3.4.2\\vanara.pinvoke.rpc.3.4.2.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.security\\3.4.2\\vanara.pinvoke.security.3.4.2.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.shared\\3.4.2\\vanara.pinvoke.shared.3.4.2.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.shell32\\3.4.2\\vanara.pinvoke.shell32.3.4.2.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.shlwapi\\3.4.2\\vanara.pinvoke.shlwapi.3.4.2.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.user32\\3.4.2\\vanara.pinvoke.user32.3.4.2.nupkg.sha512"
+  ],
   "logs": []
 }

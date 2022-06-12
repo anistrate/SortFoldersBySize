@@ -13,3 +13,17 @@ D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\obj\Debug
 D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\obj\Debug\net6.0\SortFoldersBySize.pdb
 D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\obj\Debug\net6.0\SortFoldersBySize.genruntimeconfig.cache
 D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\obj\Debug\net6.0\ref\SortFoldersBySize.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.Core.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.ComCtl32.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.Cryptography.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.Gdi32.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.Kernel32.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.Ole.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.Rpc.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.Security.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.Shared.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.Shell32.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.ShlwApi.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.User32.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\fr\Vanara.Core.resources.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\obj\Debug\net6.0\SortFoldersBySize.csproj.CopyComplete

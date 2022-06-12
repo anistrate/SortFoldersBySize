@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using static Vanara.PInvoke.Shell32;
+//using Vanara;
+
 
 namespace SortFolderBySize
 {
@@ -19,12 +22,25 @@ namespace SortFolderBySize
 
 
         private static Dictionary<string, long> DirectoriesDictionary = new Dictionary<string, long>();
-       
-
-
 
         static void Main(string[] args)
         {
+            if (args.Length == 1)
+            {
+                Console.WriteLine("Args[0]: " + args[0]);
+                var r = Console.ReadKey();
+            }else if(args.Length ==0)
+            {
+                Console.WriteLine("No args");
+                var r = Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine(" args length:" + args.Length);
+                var r = Console.ReadKey();
+            }
+            return;
+
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             string[] directories = Directory.GetDirectories(RootPath);
@@ -39,7 +55,7 @@ namespace SortFolderBySize
             foreach (var dic in DirectoriesDictionary)
             {
                 //DeleteDesktopIniFile(dic.Key);
-                CreateDesktopIniFile(dic.Key, random.Next(0, 1000000));
+                CreateDesktopIniFile(dic.Key,  dic.Value /*random.Next(0, 1000000)*/);
                 Console.WriteLine(dic.Key + " " + dic.Value);
             }
             Console.WriteLine($"Elapsed time:{elapsedTime/1000} seconds");
@@ -79,9 +95,10 @@ namespace SortFolderBySize
             {
                 stream.WriteLine(Line1);
                 stream.WriteLine(Line2);
-                stream.WriteLine(Line3.Replace("FolderTag", size.ToString()));
+                stream.WriteLine(Line3.Replace("FolderTag", FormatSizeinKB(size).ToString()));
                 stream.WriteLine(MagicCommentForCreatedFiles);
             }
+            ForceWindowsExplorerToShowTag(folder);
             File.SetAttributes(folder, FileAttributes.ReadOnly);
         }
 
@@ -100,10 +117,23 @@ namespace SortFolderBySize
 
                 if (fileShouldBeDeleted)
                 {
-                    File.SetAttributes(folder, FileAttributes.Normal);
+                    File.SetAttributes(filePath, FileAttributes.Normal);
                     File.Delete(filePath);
                 }
             }
+        }
+
+        private static long FormatSizeinKB(long size) => size > 1024 ? size / 1024 : 1;
+
+        private static void ForceWindowsExplorerToShowTag(string folderPath)
+        {
+            Vanara.PInvoke.Shell32.SHFOLDERCUSTOMSETTINGS settings = new SHFOLDERCUSTOMSETTINGS();
+            settings.dwSize = (uint)Marshal.SizeOf(typeof(SHFOLDERCUSTOMSETTINGS));
+            settings.dwMask = FOLDERCUSTOMSETTINGSMASK.FCSM_INFOTIP;
+            settings.pszInfoTip = "A text folder2.";
+            var result = Vanara.PInvoke.Shell32.SHGetSetFolderCustomSettings(ref settings, folderPath, FCS.FCS_FORCEWRITE);
+            Console.Write(result);
+            return;
         }
 
 
