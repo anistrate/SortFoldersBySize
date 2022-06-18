@@ -19,5 +19,7 @@ https://stackoverflow.com/questions/38335832/parallel-loops-for-folder-size-dete
 
 https://docs.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/send-local-toast?tabs=uwp
 
+https://superuser.com/questions/946001/where-can-i-find-complete-documentation-on-desktop-ini-for-windows-7
+
 https://docs.microsoft.com/en-US/dotnet/csharp/programming-guide/file-system/how-to-iterate-through-a-directory-tree
 https://docs.microsoft.com/en-us/dotnet/api/system.io.directory?redirectedfrom=MSDN&view=net-6.0
