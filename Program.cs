@@ -13,44 +13,63 @@ namespace SortFolderBySize
     class Program
     {
         private static string desktopIniName = "desktop.ini";
-        private static string RootPath = @"D:\Things to backup monthly\test";
+        //private static string RootPath = @"D:\Things to backup monthly\test";
         private static string Line1 = "[.ShellClassInfo]";
         private static string Line2 = "[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]";
         private static string Line3 = "Prop5=31,FolderTag";
         private static string MagicCommentForCreatedFiles = "; DangerCouldBeMyMiddleNameButItsJohn";
         private static string MagicCommentForAppendedFiles = "; WatchMrRobotNoW";
 
+        private static string CalculateFolderSizeCommand = "c";
+        private static string RemoveFolderTagsCommand = "r";
+
+
+        private static string IncorrectNumberOfParameters = "Expected 2 arguments, found :";
+        private static string PathDoesNotExist = "Path does not exist: ";
+        private static string CorrectUsageFormat = "program <path> c|r";
+        private static string InvalidCommand = " is not a valid command, please use c|r";
 
         private static Dictionary<string, long> DirectoriesDictionary = new Dictionary<string, long>();
 
         static void Main(string[] args)
         {
-            if (args.Length == 1)
+            if (args.Length != 2)
             {
-                Console.WriteLine("Args[0]: " + args[0]);
-                var r = Console.ReadKey();
-            }else if(args.Length ==0)
-            {
-                Console.WriteLine("No args");
-                var r = Console.ReadKey();
+                Console.WriteLine(IncorrectNumberOfParameters + args.Length );
+                Console.WriteLine(CorrectUsageFormat);
+                Console.ReadLine();
+                return;
             }
+
+            var RootPath = args[0];
+            if(!Directory.Exists(RootPath))
+            {
+                Console.WriteLine(PathDoesNotExist);
+                Console.WriteLine(CorrectUsageFormat);
+                Console.ReadLine();
+                return;
+            }    
+
+            if (args[1] == CalculateFolderSizeCommand) CalculateFolderSizesForPath();
+            else if (args[1] == RemoveFolderTagsCommand) RemoveFolderTags();
             else
             {
-                Console.WriteLine(" args length:" + args.Length);
-                var r = Console.ReadKey();
+                Console.WriteLine(args[1] + InvalidCommand);
+                Console.WriteLine(CorrectUsageFormat);
+                Console.ReadLine();
+                return;
             }
-            return;
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
+            //var stopwatch = new Stopwatch();
+            //stopwatch.Start();
             string[] directories = Directory.GetDirectories(RootPath);
             foreach (string directory in directories)
             {
                 DirectoriesDictionary.Add(directory, GetFolderSize(directory));
             }
 
-            stopwatch.Stop();
-            var elapsedTime = stopwatch.ElapsedMilliseconds;
+            //stopwatch.Stop();
+            //var elapsedTime = stopwatch.ElapsedMilliseconds;
             Random random = new Random();
             foreach (var dic in DirectoriesDictionary)
             {
@@ -61,6 +80,11 @@ namespace SortFolderBySize
             Console.WriteLine($"Elapsed time:{elapsedTime/1000} seconds");
 
 
+
+        }
+
+        private static void CalculateFolderSizesForPath(string path)
+        {
 
         }
 
