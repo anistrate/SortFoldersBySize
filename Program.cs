@@ -17,6 +17,7 @@ namespace SortFolderBySize
         private static string Line1 = "[.ShellClassInfo]";
         private static string Line2 = "[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]";
         private static string Line3 = "Prop5=31,FolderTag";
+        private static string Line4 = "Prop2=31,Title";
         private static string MagicCommentForCreatedFiles = "; DangerCouldBeMyMiddleNameButItsJohn";
         private static string MagicCommentForAppendedFiles = "; WatchMrRobotNoW";
 
@@ -29,104 +30,148 @@ namespace SortFolderBySize
         private static string CorrectUsageFormat = "program <path> c|r";
         private static string InvalidCommand = " is not a valid command, please use c|r";
 
-        private static Dictionary<string, long> DirectoriesDictionary = new Dictionary<string, long>();
+        //private static Dictionary<string, long> DirectoriesDictionary = new Dictionary<string, long>();
 
         static void Main(string[] args)
         {
-            if (args.Length != 2)
+            args = new string[2];
+            args[0] = @"D:\Things to backup monthly\test";
+            args[1] = "c";
+
+            try
             {
-                Console.WriteLine(IncorrectNumberOfParameters + args.Length );
-                Console.WriteLine(CorrectUsageFormat);
+                if (args.Length != 2)
+                {
+                    Console.WriteLine(IncorrectNumberOfParameters + args.Length);
+                    Console.WriteLine(CorrectUsageFormat);
+                    Console.ReadLine();
+                    return;
+                }
+
+                var RootPath = args[0];
+                if (!Directory.Exists(RootPath))
+                {
+                    Console.WriteLine(PathDoesNotExist);
+                    Console.WriteLine(CorrectUsageFormat);
+                    Console.ReadLine();
+                    return;
+                }
+
+                if (args[1] == CalculateFolderSizeCommand)
+                {
+                    var directoriesDictionary = CalculateFolderSizes(RootPath);
+                    AddFolderTags(directoriesDictionary);
+                    ForceWindowsExplorerToShowTag(RootPath);
+
+                }
+                else if (args[1] == RemoveFolderTagsCommand)
+                {
+                    RemoveFolderTags(RootPath);
+                    ForceWindowsExplorerToShowTag(RootPath);
+                }
+                else
+                {
+                    Console.WriteLine(args[1] + InvalidCommand);
+                    Console.WriteLine(CorrectUsageFormat);
+                    Console.ReadLine();
+                    return;
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
                 Console.ReadLine();
-                return;
             }
-
-            var RootPath = args[0];
-            if(!Directory.Exists(RootPath))
-            {
-                Console.WriteLine(PathDoesNotExist);
-                Console.WriteLine(CorrectUsageFormat);
-                Console.ReadLine();
-                return;
-            }    
-
-            if (args[1] == CalculateFolderSizeCommand) CalculateFolderSizesForPath();
-            else if (args[1] == RemoveFolderTagsCommand) RemoveFolderTags();
-            else
-            {
-                Console.WriteLine(args[1] + InvalidCommand);
-                Console.WriteLine(CorrectUsageFormat);
-                Console.ReadLine();
-                return;
-            }
-
-            //var stopwatch = new Stopwatch();
-            //stopwatch.Start();
-            string[] directories = Directory.GetDirectories(RootPath);
-            foreach (string directory in directories)
-            {
-                DirectoriesDictionary.Add(directory, GetFolderSize(directory));
-            }
-
-            //stopwatch.Stop();
-            //var elapsedTime = stopwatch.ElapsedMilliseconds;
-            Random random = new Random();
-            foreach (var dic in DirectoriesDictionary)
-            {
-                //DeleteDesktopIniFile(dic.Key);
-                CreateDesktopIniFile(dic.Key,  dic.Value /*random.Next(0, 1000000)*/);
-                Console.WriteLine(dic.Key + " " + dic.Value);
-            }
-            Console.WriteLine($"Elapsed time:{elapsedTime/1000} seconds");
-
+            
 
 
         }
 
-        private static void CalculateFolderSizesForPath(string path)
+        private static Dictionary<string, long> CalculateFolderSizes(string path)
         {
-
+            var directoriesDictionary = new Dictionary<string, long>();
+            string[] directories = Directory.GetDirectories(path);
+            foreach (string directory in directories)
+            {
+                directoriesDictionary.Add(directory, GetFolderSize(directory));
+            }
+            return directoriesDictionary;
         }
 
         private static long GetFolderSize(string folderPath)
         {
             long folderSize = 0;
-            if(Directory.Exists(folderPath))
+            DirectoryInfo dir = new DirectoryInfo(folderPath);
+            foreach (FileInfo fi in dir.GetFiles("*", SearchOption.AllDirectories))
             {
-                string[] folders = Directory.GetDirectories(folderPath);
-                string[] files = Directory.GetFiles(folderPath);
-
-                foreach (string directory in folders)
-                {
-                    folderSize += GetFolderSize(directory);
-                }
-
-                foreach (string file in files)
-                {
-                    var fileInfo = new FileInfo(file);
-                    if(fileInfo.Exists) folderSize += fileInfo.Length;
-                }
-                
+                folderSize += fi.Length;
             }
             return folderSize;
-
         }
+
+        private static void RemoveFolderTags(string path)
+        {
+            string[] directories = Directory.GetDirectories(path);
+            foreach (string directory in directories)
+            {
+                RemoveTagForFolder(directory);
+            }
+        }
+
+        private static void AddFolderTags(Dictionary<string, long> directoriesDictionary)
+        {
+            
+            foreach (var dic in directoriesDictionary)
+            {
+                CreateDesktopIniFile(dic.Key, dic.Value);
+            }
+           
+        }
+
 
         private static void CreateDesktopIniFile(string folder, long size)
         {
             string filePath = folder + "/" + desktopIniName;
-            using (var stream = new StreamWriter(File.Create(filePath)))
+            if (!File.Exists(filePath))
             {
-                stream.WriteLine(Line1);
-                stream.WriteLine(Line2);
-                stream.WriteLine(Line3.Replace("FolderTag", FormatSizeinKB(size).ToString()));
-                stream.WriteLine(MagicCommentForCreatedFiles);
+                using (var stream = new StreamWriter(File.Create(filePath)))
+                {
+                    stream.WriteLine(Line1);
+                    stream.WriteLine(Line2);
+                    stream.WriteLine(Line3.Replace("FolderTag", FormatSizeinKB(size).ToString()));
+                    stream.WriteLine(Line4.Replace("Title", FormatSizeinKB(size).ToString("N0") + " KB"));
+                    stream.WriteLine(MagicCommentForCreatedFiles);
+                }
+                //ForceWindowsExplorerToShowTag(folder);
+                File.SetAttributes(folder, FileAttributes.ReadOnly);
             }
-            ForceWindowsExplorerToShowTag(folder);
-            File.SetAttributes(folder, FileAttributes.ReadOnly);
+            else
+            {
+                using (var reader = new StreamReader(filePath))
+                {
+                    string contents = reader.ReadToEnd();
+                    if (contents.Contains(MagicCommentForCreatedFiles) || contents.Contains(MagicCommentForAppendedFiles))
+                    {
+                        File.WriteAllLines(filePath, File.ReadAllLines(filePath).
+                             Where(x => !x.Contains("Prop5=31") ||
+                                        !x.Contains("Prop2=31")));
+                        
+
+                        File.AppendAllText(filePath, Line3.Replace("FolderTag", FormatSizeinKB(size).ToString()));
+                        File.AppendAllText(filePath,Line4.Replace("Title", FormatSizeinKB(size).ToString("N0") + " KB"));
+
+                    }
+                    else 
+                    {
+                        File.AppendAllText(filePath,Line3.Replace("FolderTag", FormatSizeinKB(size).ToString()));
+                        File.AppendAllText(filePath,Line4.Replace("Title", FormatSizeinKB(size).ToString("N0") + " KB"));
+                        File.AppendAllText(filePath,MagicCommentForAppendedFiles);
+                    }
+                }
+            }
         }
 
-        private static void DeleteDesktopIniFile(string folder)
+        private static void RemoveTagForFolder(string folder)
         {
             var fileShouldBeDeleted = false;
             string filePath = folder + "/" + desktopIniName;
@@ -136,7 +181,13 @@ namespace SortFolderBySize
                 {
                     string contents = reader.ReadToEnd();
                     if (contents.Contains(MagicCommentForCreatedFiles)) fileShouldBeDeleted = true;
-                    else if (contents.Contains(MagicCommentForAppendedFiles)) ;
+                    else if (contents.Contains(MagicCommentForAppendedFiles))
+                    {
+                        File.WriteAllLines(filePath, File.ReadAllLines(filePath).
+                             Where(x => !x.Contains("Prop5=31") ||
+                                        !x.Contains(MagicCommentForAppendedFiles) ||
+                                        !x.Contains("Prop2=31")));
+                    }
                 }
 
                 if (fileShouldBeDeleted)
@@ -147,7 +198,7 @@ namespace SortFolderBySize
             }
         }
 
-        private static long FormatSizeinKB(long size) => size > 1024 ? size / 1024 : 1;
+        private static long FormatSizeinKB(long size) => size > 1000 ? size / 1000 : 1;
 
         private static void ForceWindowsExplorerToShowTag(string folderPath)
         {
