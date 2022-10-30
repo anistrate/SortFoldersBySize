@@ -1,0 +1,14 @@
+1. HKEY_CLASSES_ROOT/Directory/Background/shell/Folder Size -> Default REG_SZ (value not set)
+															   Icon REG_SZ path\folder-category.ico
+															   MUIVerb REG_SZ Folder size
+															   SubCommands REG_SZ calculatefoldersize;removefolderseizetags
+2. HKEY_LOCAL_MACHINE/Software/Microsoft/Windows/CurrentVersion/Explorer/CommandStore/shell/calculatefoldersize/command -> REG_SZ Data path\CalculateFolderSize.bat c
+3. HKEY_LOCAL_MACHINE/Software/Microsoft/Windows/CurrentVersion/Explorer/CommandStore/shell/removefoldersizetags/command -> REG_SZ Data path\CalculateFolderSize.bat r
+
+
+CalculateFolderSize.bat contains:
+"D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\SortFoldersBySize.exe" "%CD%" %1
+
+Also this: https://stackoverflow.com/questions/61524556/why-is-it-not-recommended-to-use-hkcr-registry-root-key-in-inno-setup
+Consider using HKEY_LOCAL_MACHINE/Software/Classes and then directory
+
