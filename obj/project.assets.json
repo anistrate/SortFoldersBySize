@@ -18,10 +18,14 @@
           "System.Security.Principal.Windows": "5.0.0"
         },
         "compile": {
-          "ref/netstandard2.0/Microsoft.Win32.Registry.dll": {}
+          "ref/netstandard2.0/Microsoft.Win32.Registry.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/Microsoft.Win32.Registry.dll": {}
+          "lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/win/lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
@@ -37,10 +41,14 @@
           "System.Security.Principal.Windows": "5.0.0"
         },
         "compile": {
-          "ref/netstandard2.0/System.Security.AccessControl.dll": {}
+          "ref/netstandard2.0/System.Security.AccessControl.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Security.AccessControl.dll": {}
+          "lib/netstandard2.0/System.Security.AccessControl.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/win/lib/netcoreapp2.0/System.Security.AccessControl.dll": {
@@ -52,10 +60,14 @@
       "System.Security.Principal.Windows/5.0.0": {
         "type": "package",
         "compile": {
-          "ref/netcoreapp3.0/System.Security.Principal.Windows.dll": {}
+          "ref/netcoreapp3.0/System.Security.Principal.Windows.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/netstandard2.0/System.Security.Principal.Windows.dll": {}
+          "lib/netstandard2.0/System.Security.Principal.Windows.dll": {
+            "related": ".xml"
+          }
         },
         "runtimeTargets": {
           "runtimes/unix/lib/netcoreapp2.1/System.Security.Principal.Windows.dll": {
@@ -71,10 +83,14 @@
       "Vanara.Core/3.4.2": {
         "type": "package",
         "compile": {
-          "lib/net6.0/Vanara.Core.dll": {}
+          "lib/net6.0/Vanara.Core.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.Core.dll": {}
+          "lib/net6.0/Vanara.Core.dll": {
+            "related": ".xml"
+          }
         },
         "resource": {
           "lib/net6.0/fr/Vanara.Core.resources.dll": {
@@ -92,10 +108,14 @@
           "Vanara.PInvoke.User32": "3.4.2"
         },
         "compile": {
-          "lib/net6.0/Vanara.PInvoke.ComCtl32.dll": {}
+          "lib/net6.0/Vanara.PInvoke.ComCtl32.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.PInvoke.ComCtl32.dll": {}
+          "lib/net6.0/Vanara.PInvoke.ComCtl32.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Vanara.PInvoke.Cryptography/3.4.2": {
@@ -105,10 +125,14 @@
           "Vanara.PInvoke.Shared": "3.4.2"
         },
         "compile": {
-          "lib/net6.0/Vanara.PInvoke.Cryptography.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Cryptography.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.PInvoke.Cryptography.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Cryptography.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Vanara.PInvoke.Gdi32/3.4.2": {
@@ -118,10 +142,14 @@
           "Vanara.PInvoke.Shared": "3.4.2"
         },
         "compile": {
-          "lib/net6.0/Vanara.PInvoke.Gdi32.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Gdi32.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.PInvoke.Gdi32.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Gdi32.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Vanara.PInvoke.Kernel32/3.4.2": {
@@ -131,10 +159,14 @@
           "Vanara.PInvoke.Shared": "3.4.2"
         },
         "compile": {
-          "lib/net6.0/Vanara.PInvoke.Kernel32.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Kernel32.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.PInvoke.Kernel32.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Kernel32.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Vanara.PInvoke.Ole/3.4.2": {
@@ -146,10 +178,14 @@
           "Vanara.PInvoke.Shared": "3.4.2"
         },
         "compile": {
-          "lib/net6.0/Vanara.PInvoke.Ole.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Ole.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.PInvoke.Ole.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Ole.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Vanara.PInvoke.Rpc/3.4.2": {
@@ -160,10 +196,14 @@
           "Vanara.PInvoke.Shared": "3.4.2"
         },
         "compile": {
-          "lib/net6.0/Vanara.PInvoke.Rpc.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Rpc.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.PInvoke.Rpc.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Rpc.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Vanara.PInvoke.Security/3.4.2": {
@@ -175,10 +215,14 @@
           "Vanara.PInvoke.Shared": "3.4.2"
         },
         "compile": {
-          "lib/net6.0/Vanara.PInvoke.Security.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Security.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.PInvoke.Security.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Security.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Vanara.PInvoke.Shared/3.4.2": {
@@ -188,10 +232,14 @@
           "Vanara.Core": "3.4.2"
         },
         "compile": {
-          "lib/net6.0/Vanara.PInvoke.Shared.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Shared.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.PInvoke.Shared.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Shared.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Vanara.PInvoke.Shell32/3.4.2": {
@@ -206,10 +254,14 @@
           "Vanara.PInvoke.ShlwApi": "3.4.2"
         },
         "compile": {
-          "lib/net6.0/Vanara.PInvoke.Shell32.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Shell32.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.PInvoke.Shell32.dll": {}
+          "lib/net6.0/Vanara.PInvoke.Shell32.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Vanara.PInvoke.ShlwApi/3.4.2": {
@@ -220,10 +272,14 @@
           "Vanara.PInvoke.Shared": "3.4.2"
         },
         "compile": {
-          "lib/net6.0/Vanara.PInvoke.ShlwApi.dll": {}
+          "lib/net6.0/Vanara.PInvoke.ShlwApi.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.PInvoke.ShlwApi.dll": {}
+          "lib/net6.0/Vanara.PInvoke.ShlwApi.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Vanara.PInvoke.User32/3.4.2": {
@@ -235,10 +291,14 @@
           "Vanara.PInvoke.Shared": "3.4.2"
         },
         "compile": {
-          "lib/net6.0/Vanara.PInvoke.User32.dll": {}
+          "lib/net6.0/Vanara.PInvoke.User32.dll": {
+            "related": ".xml"
+          }
         },
         "runtime": {
-          "lib/net6.0/Vanara.PInvoke.User32.dll": {}
+          "lib/net6.0/Vanara.PInvoke.User32.dll": {
+            "related": ".xml"
+          }
         }
       }
     }
@@ -770,7 +830,8 @@
           "net47",
           "net471",
           "net472",
-          "net48"
+          "net48",
+          "net481"
         ],
         "assetTargetFallback": true,
         "warn": true,
@@ -779,7 +840,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
       }
     }
   }
