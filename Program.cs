@@ -38,6 +38,8 @@ namespace SortFolderBySize
             args[0] = @"D:\Things to backup monthly\test";
             args[1] = "c";
 
+            
+
             try
             {
                 if (args.Length != 2)

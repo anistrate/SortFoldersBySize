@@ -40,9 +40,17 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "System.IO.Abstractions": {
+              "target": "Package",
+              "version": "[19.2.1, )"
+            },
+            "System.IO.Abstractions.TestingHelpers": {
+              "target": "Package",
+              "version": "[19.2.1, )"
+            },
             "Vanara.PInvoke.Shell32": {
               "target": "Package",
-              "version": "[3.4.2, )"
+              "version": "[3.4.13, )"
             }
           },
           "imports": [
@@ -61,7 +69,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }
