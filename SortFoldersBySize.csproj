@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.4.2" />
+    <PackageReference Include="System.IO.Abstractions" Version="19.2.1" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="19.2.1" />
+    <PackageReference Include="Vanara.PInvoke.Shell32" Version="3.4.13" />
   </ItemGroup>
 
 </Project>

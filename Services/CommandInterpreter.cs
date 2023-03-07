@@ -12,26 +12,13 @@ namespace SortFoldersBySize.Services
     {
 
         private const string IncorrectNumberOfArguments = "Expected 2 arguments, found {0}";
-        private const string FilePathNotFound = "Filepath {0} not found";
         private const string InvalidParameter = "Invalid parameter {0}, usage: program <path> c|r";
-
-        private IFileSystem _fileSystem;
-
-        public CommandInterpreter(IFileSystem fileSystem)
-        {
-            _fileSystem = fileSystem;
-        }
 
         public Result<CommandArgs> InterpretCommand(string[] args)
         {
             if(args.Length != 2)
             {
                 return Result.Fail<CommandArgs>(string.Format(IncorrectNumberOfArguments, args.Length) );
-            }
-
-            if (!_fileSystem.Directory.Exists(args[0]))
-            {
-                return Result.Fail<CommandArgs>(string.Format(FilePathNotFound, args[0]));
             }
 
             if (args[1]=="c" || args[1] == "C")

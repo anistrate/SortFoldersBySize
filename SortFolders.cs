@@ -1,7 +1,10 @@
-﻿using System;
+﻿using SortFoldersBySize.Models;
+using SortFoldersBySize.Services;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Abstractions;
 using System.Runtime.InteropServices;
 using static Vanara.PInvoke.Shell32;
 //using Vanara;
@@ -10,7 +13,7 @@ using static Vanara.PInvoke.Shell32;
 namespace SortFolderBySize
 {
 
-    class Program
+    public class SortFolders
     {
         private static string desktopIniName = "desktop.ini";
         //private static string RootPath = @"D:\Things to backup monthly\test";
@@ -23,22 +26,65 @@ namespace SortFolderBySize
 
         private static string CalculateFolderSizeCommand = "c";
         private static string RemoveFolderTagsCommand = "r";
-
+        private CommandInterpreter interpreter = new CommandInterpreter();
 
         private static string IncorrectNumberOfParameters = "Expected 2 arguments, found :";
         private static string PathDoesNotExist = "Path does not exist: ";
         private static string CorrectUsageFormat = "program <path> c|r";
         private static string InvalidCommand = " is not a valid command, please use c|r";
-
+        private const string FilePathNotFound = "Filepath {0} not found";
         //private static Dictionary<string, long> DirectoriesDictionary = new Dictionary<string, long>();
+
+        private readonly SizeCalculator sizeCalculator; 
+        public SortFolders(IFileSystem fileSystem)
+        {
+
+            sizeCalculator = new SizeCalculator(fileSystem);
+        }
+
+        public Result<CommandArgs> InterpretCommand(string[] args)
+        {
+            return interpreter.InterpretCommand(args);
+        }
+
+        public Result FolderExists(string path)
+        {
+            return sizeCalculator.FolderExists(path);
+        }
 
         static void Main(string[] args)
         {
+            var sortFolders = new SortFolders(new FileSystem());
+            var commandResult = sortFolders.InterpretCommand(args);
+
+            if(commandResult.IsFailure)
+            {
+                //TODO
+                //to use windows tray notifications
+                //also consider a log file
+                Console.WriteLine(commandResult.Error);
+                return;
+            }
+
+            var command = commandResult.Value;
+            var folderResult = sortFolders.FolderExists(command.RootPath);
+
+            if(folderResult.IsFailure)
+            {
+                //TODO
+                //to use windows tray notifications
+                //also consider a log file
+                Console.WriteLine(folderResult.Error);
+                return;
+            }
+
+            //TODO add a -help or --help command??
+
+            
+
             args = new string[2];
             args[0] = @"D:\Things to backup monthly\test";
             args[1] = "c";
-
-            
 
             try
             {
