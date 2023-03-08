@@ -27,3 +27,8 @@ D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug
 D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\Vanara.PInvoke.User32.dll
 D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\fr\Vanara.Core.resources.dll
 D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\obj\Debug\net6.0\SortFoldersBySize.csproj.CopyComplete
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\System.IO.Abstractions.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\System.IO.Abstractions.TestingHelpers.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\TestableIO.System.IO.Abstractions.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\TestableIO.System.IO.Abstractions.TestingHelpers.dll
+D:\Things to backup monthly\Github\SortFoldersBySize\SortFoldersBySize\bin\Debug\net6.0\TestableIO.System.IO.Abstractions.Wrappers.dll

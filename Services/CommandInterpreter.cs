@@ -16,6 +16,7 @@ namespace SortFoldersBySize.Services
 
         public Result<CommandArgs> InterpretCommand(string[] args)
         {
+
             if(args.Length != 2)
             {
                 return Result.Fail<CommandArgs>(string.Format(IncorrectNumberOfArguments, args.Length) );
