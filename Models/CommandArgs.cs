@@ -16,6 +16,15 @@ namespace SortFoldersBySize.Models
             this.Command = Command;
             this.RootPath = RootPath;
         }
+        
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (Object.ReferenceEquals(this, obj)) return true;
+            var cmd = (CommandArgs)obj;
+            return this.Command == cmd.Command
+                && this.RootPath == cmd.RootPath;
+        }
 
     }
 }
