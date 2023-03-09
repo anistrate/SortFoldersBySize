@@ -1,0 +1,32 @@
+{
+  "version": 2,
+  "dgSpecHash": "NRqbRqQYbTR2vxq1CnYVISykXdVm18jO+RrlIVs93/TttSZz+p1ZPm/1A01cM1MLdhVjM4Hetlw7Sn9UDlH05A==",
+  "success": true,
+  "projectFilePath": "D:\\Things to backup monthly\\Github\\SortFoldersBySize\\SortFoldersBySize\\SortFoldersBySize\\SortFoldersBySize.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ist_a\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\netstandard.library\\2.0.0\\netstandard.library.2.0.0.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\nunit\\3.13.3\\nunit.3.13.3.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\system.io.abstractions\\19.2.1\\system.io.abstractions.19.2.1.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\system.io.abstractions.testinghelpers\\19.2.1\\system.io.abstractions.testinghelpers.19.2.1.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\system.security.accesscontrol\\5.0.0\\system.security.accesscontrol.5.0.0.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\testableio.system.io.abstractions\\19.2.1\\testableio.system.io.abstractions.19.2.1.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\testableio.system.io.abstractions.testinghelpers\\19.2.1\\testableio.system.io.abstractions.testinghelpers.19.2.1.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\testableio.system.io.abstractions.wrappers\\19.2.1\\testableio.system.io.abstractions.wrappers.19.2.1.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.core\\3.4.13\\vanara.core.3.4.13.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.comctl32\\3.4.13\\vanara.pinvoke.comctl32.3.4.13.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.cryptography\\3.4.13\\vanara.pinvoke.cryptography.3.4.13.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.gdi32\\3.4.13\\vanara.pinvoke.gdi32.3.4.13.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.kernel32\\3.4.13\\vanara.pinvoke.kernel32.3.4.13.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.ole\\3.4.13\\vanara.pinvoke.ole.3.4.13.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.rpc\\3.4.13\\vanara.pinvoke.rpc.3.4.13.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.security\\3.4.13\\vanara.pinvoke.security.3.4.13.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.shared\\3.4.13\\vanara.pinvoke.shared.3.4.13.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.shell32\\3.4.13\\vanara.pinvoke.shell32.3.4.13.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.shlwapi\\3.4.13\\vanara.pinvoke.shlwapi.3.4.13.nupkg.sha512",
+    "C:\\Users\\ist_a\\.nuget\\packages\\vanara.pinvoke.user32\\3.4.13\\vanara.pinvoke.user32.3.4.13.nupkg.sha512"
+  ],
+  "logs": []
+}
