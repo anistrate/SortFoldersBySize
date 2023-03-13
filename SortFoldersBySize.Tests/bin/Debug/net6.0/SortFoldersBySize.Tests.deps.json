@@ -880,6 +880,17 @@
             "fileVersion": "3.4.13.0"
           }
         }
+      },
+      "SortFoldersBySize/1.0.0": {
+        "dependencies": {
+          "NUnit": "3.13.3",
+          "System.IO.Abstractions": "19.2.1",
+          "System.IO.Abstractions.TestingHelpers": "19.2.1",
+          "Vanara.PInvoke.Shell32": "3.4.13"
+        },
+        "runtime": {
+          "SortFoldersBySize.dll": {}
+        }
       }
     }
   },
@@ -1357,6 +1368,11 @@
       "sha512": "sha512-ctMzRPuYMYOIUq5SeOUb9Y5qSqSq5uxC9yEPQRHZDyFK9nMSRFPrBEk4XNXb0luaw1+cBLYdnwhSqLew0kxOwg==",
       "path": "vanara.pinvoke.user32/3.4.13",
       "hashPath": "vanara.pinvoke.user32.3.4.13.nupkg.sha512"
+    },
+    "SortFoldersBySize/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

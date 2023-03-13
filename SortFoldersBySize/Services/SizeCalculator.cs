@@ -28,12 +28,24 @@ namespace SortFoldersBySize.Services
             return Result.Ok();
         }
 
-        public void InterpretCommand(CommandArgs command)
+        public Result InterpretCommand(CommandArgs command)
         {
-            switch(command)
+            switch(command.Command)
             {
+                case CommandConstants.Calculate:
 
+
+                    return Result.Ok();
+                    break;
+                case CommandConstants.RemoveTags:
+
+                    return Result.Ok();
+                    break;
+                default:
+                    throw new Exception("Invalid command");
             }
+
+
         }
 
         public void CalculateFolderSizes(string path)

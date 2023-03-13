@@ -5,11 +5,11 @@ namespace SortFoldersBySize.Tests
     public static class Stubs
     {
         private static string DefaultPath = "D:/";
-        private static string CalculateCommand1 = "c";
-        private static string RemoveCommand1 = "r";
+        private static string CalculateCommand = "c";
+        private static string RemoveCommand = "r";
         private static string IncorrectCommand_i = "i";
+        private static string CalculateCommandUpperCase = "C";
 
-        private static string IncorretArgumentErrorMessage = "Invalid parameter {0}, usage: program <path> c|r";
 
         public static Result<CommandArgs> GetCalculateCommand()
         {
@@ -23,22 +23,42 @@ namespace SortFoldersBySize.Tests
 
         public static Result<CommandArgs> GetIncorrectCommandResult()
         {
-            return Result.Fail<CommandArgs>(string.Format(IncorretArgumentErrorMessage, IncorrectCommand_i));
+            return Result.Fail<CommandArgs>(string.Format(CommandErrorMessages.InvalidParameter, IncorrectCommand_i));
+        }
+
+        public static Result<CommandArgs> GetIncorrectNumberOfArgumentsResult(int numberOfArguments)
+        {
+            return Result.Fail<CommandArgs>(string.Format(CommandErrorMessages.IncorrectNumberOfArguments, numberOfArguments));
         }
 
         public static string[] GetArgsCalculateCorrect()
         {
-            return new string[] { DefaultPath, CalculateCommand1 };
+            return new string[] { DefaultPath, CalculateCommand };
+        }
+
+        public static string[] GetArgsCalculateUppercaseCorrect()
+        {
+            return new string[] { DefaultPath, CalculateCommandUpperCase };
         }
 
         public static string[] GetArgsRemoveCorrect()
         {
-            return new string[] { DefaultPath, RemoveCommand1 };
+            return new string[] { DefaultPath, RemoveCommand };
         }
 
         public static string[] GetArgsIncorrectCommand()
         {
             return new string[] { DefaultPath, IncorrectCommand_i };
+        }
+
+        public static string[] GetArgsMoreThan2()
+        {
+            return new string[] { DefaultPath, IncorrectCommand_i, IncorrectCommand_i };
+        }
+
+        public static string[] GetArgsOnlyOne()
+        {
+            return new string[] { DefaultPath};
         }
 
 

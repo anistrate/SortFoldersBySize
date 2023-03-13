@@ -26,7 +26,7 @@ namespace SortFolderBySize
 
         private static string CalculateFolderSizeCommand = "c";
         private static string RemoveFolderTagsCommand = "r";
-        private CommandInterpreter interpreter = new CommandInterpreter();
+
 
         private static string IncorrectNumberOfParameters = "Expected 2 arguments, found :";
         private static string PathDoesNotExist = "Path does not exist: ";
@@ -35,7 +35,8 @@ namespace SortFolderBySize
         private const string FilePathNotFound = "Filepath {0} not found";
         //private static Dictionary<string, long> DirectoriesDictionary = new Dictionary<string, long>();
 
-        private readonly SizeCalculator sizeCalculator; 
+        private readonly SizeCalculator sizeCalculator;
+        private readonly CommandInterpreter interpreter = new CommandInterpreter();
         public SortFolders(IFileSystem fileSystem)
         {
 
@@ -47,27 +48,22 @@ namespace SortFolderBySize
             return interpreter.InterpretCommand(args);
         }
 
-        public Result FolderExists(string path)
-        {
-            return sizeCalculator.FolderExists(path);
-        }
-
         static void Main(string[] args)
         {
             var sortFolders = new SortFolders(new FileSystem());
-            var commandResult = sortFolders.InterpretCommand(args);
+            var argResult = sortFolders.InterpretCommand(args);
 
-            if(commandResult.IsFailure)
+            if(argResult.IsFailure)
             {
                 //TODO
                 //to use windows tray notifications
                 //also consider a log file
-                Console.WriteLine(commandResult.Error);
+                Console.WriteLine(argResult.Error);
                 return;
             }
 
-            var command = commandResult.Value;
-            var folderResult = sortFolders.FolderExists(command.RootPath);
+            var command = argResult.Value;
+            var folderResult = sortFolders.sizeCalculator.FolderExists(command.RootPath);
 
             if(folderResult.IsFailure)
             {
@@ -76,6 +72,13 @@ namespace SortFolderBySize
                 //also consider a log file
                 Console.WriteLine(folderResult.Error);
                 return;
+            }
+
+            var commandResult = sortFolders.sizeCalculator.InterpretCommand(command);
+            
+            if(commandResult.IsFailure)
+            {
+
             }
 
             //TODO add a -help or --help command??
@@ -87,24 +90,7 @@ namespace SortFolderBySize
             args[1] = "c";
 
             try
-            {
-                if (args.Length != 2)
-                {
-                    Console.WriteLine(IncorrectNumberOfParameters + args.Length);
-                    Console.WriteLine(CorrectUsageFormat);
-                    Console.ReadLine();
-                    return;
-                }
-
-                var RootPath = args[0];
-                if (!Directory.Exists(RootPath))
-                {
-                    Console.WriteLine(PathDoesNotExist);
-                    Console.WriteLine(CorrectUsageFormat);
-                    Console.ReadLine();
-                    return;
-                }
-
+            { 
                 if (args[1] == CalculateFolderSizeCommand)
                 {
                     var directoriesDictionary = CalculateFolderSizes(RootPath);
@@ -117,13 +103,7 @@ namespace SortFolderBySize
                     RemoveFolderTags(RootPath);
                     ForceWindowsExplorerToShowTag(RootPath);
                 }
-                else
-                {
-                    Console.WriteLine(args[1] + InvalidCommand);
-                    Console.WriteLine(CorrectUsageFormat);
-                    Console.ReadLine();
-                    return;
-                }
+
             }
             catch(Exception ex)
             {
