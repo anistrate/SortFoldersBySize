@@ -33,7 +33,7 @@ namespace SortFoldersBySize.Services
             switch(command.Command)
             {
                 case CommandConstants.Calculate:
-
+                    var directoriesDictionary = CalculateFolderSizes(command.RootPath);
 
                     return Result.Ok();
                     break;
@@ -48,9 +48,26 @@ namespace SortFoldersBySize.Services
 
         }
 
-        public void CalculateFolderSizes(string path)
+        private Dictionary<string, long> CalculateFolderSizes(string path)
         {
+            var directoriesDictionary = new Dictionary<string, long>();
+            string[] directories = _fileSystem.Directory.GetDirectories(path);
+            foreach (string directory in directories)
+            {
+                directoriesDictionary.Add(directory, GetFolderSize(directory));
+            }
+            return directoriesDictionary;
+        }
 
+        private long GetFolderSize(string folderPath)
+        {
+            long folderSize = 0;
+            var dirInfo = _fileSystem.DirectoryInfo.New(folderPath);
+            foreach (var fi in dirInfo.GetFiles("*", SearchOption.AllDirectories))
+            {
+                folderSize += fi.Length;
+            }
+            return folderSize;
         }
 
         public void RemoveFolderTags(string path)

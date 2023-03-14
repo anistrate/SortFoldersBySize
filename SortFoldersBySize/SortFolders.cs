@@ -115,28 +115,6 @@ namespace SortFolderBySize
 
         }
 
-        private static Dictionary<string, long> CalculateFolderSizes(string path)
-        {
-            var directoriesDictionary = new Dictionary<string, long>();
-            string[] directories = Directory.GetDirectories(path);
-            foreach (string directory in directories)
-            {
-                directoriesDictionary.Add(directory, GetFolderSize(directory));
-            }
-            return directoriesDictionary;
-        }
-
-        private static long GetFolderSize(string folderPath)
-        {
-            long folderSize = 0;
-            DirectoryInfo dir = new DirectoryInfo(folderPath);
-            foreach (FileInfo fi in dir.GetFiles("*", SearchOption.AllDirectories))
-            {
-                folderSize += fi.Length;
-            }
-            return folderSize;
-        }
-
         private static void RemoveFolderTags(string path)
         {
             string[] directories = Directory.GetDirectories(path);
