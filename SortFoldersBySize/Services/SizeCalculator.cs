@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO.Abstractions;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,7 @@ namespace SortFoldersBySize.Services
     public  class SizeCalculator
     {
         private IFileSystem _fileSystem;
+        private const string DesktopIniFile = "/desktop.ini";
         private const string InvalidPath = "The specified path {0} does not exist or an error has occured trying to access it.";
         public SizeCalculator(IFileSystem fileSystem)
         {
@@ -34,7 +36,7 @@ namespace SortFoldersBySize.Services
             {
                 case CommandConstants.Calculate:
                     var directoriesDictionary = CalculateFolderSizes(command.RootPath);
-
+                    var result = SetFolderTags(directoriesDictionary);
                     return Result.Ok();
                     break;
                 case CommandConstants.RemoveTags:
@@ -42,9 +44,53 @@ namespace SortFoldersBySize.Services
                     return Result.Ok();
                     break;
                 default:
-                    throw new Exception("Invalid command");
+                    throw new ArgumentException($"Invalid argument {command.Command}");
             }
 
+
+        }
+
+        public Result SetFolderTags(Dictionary<string, long> directories)
+        {
+            foreach(var directory in directories)
+            {
+                var folderTagCase = GetFolderTagCase(directory + DesktopIniFile);
+
+                switch(folderTagCase)
+                {
+                    case FolderTagCase.DesktopIniNotExist:
+
+                        break;
+                    case FolderTagCase.DesktopIniCreatedByThis:
+
+                        break;
+
+                    case FolderTagCase.DesktopIniCreatedBySystem:
+
+                        break;
+                    case FolderTagCase.DesktopIniModifiedByThis:
+
+                        break;
+                    default:
+                        throw new ArgumentException($"Invalid argument {folderTagCase}");
+                }
+            }
+
+            return Result.Ok();
+        }
+
+        public FolderTagCase GetFolderTagCase(string path)
+        {
+            var desktopIniExists =  _fileSystem.File.Exists(path);
+            if (!desktopIniExists) return FolderTagCase.DesktopIniNotExist;  
+
+            using var reader = new StreamReader(path);
+            var content = reader.ReadToEnd();
+
+            if (content.Contains(MagiGStrings.MagicCommentForCreatedFiles)) return FolderTagCase.DesktopIniCreatedByThis;
+            if (content.Contains(MagiGStrings.MagicCommentForModifiedFiles)) return FolderTagCase.DesktopIniModifiedByThis;
+
+            return FolderTagCase.DesktopIniCreatedBySystem;
 
         }
 
