@@ -17,12 +17,7 @@ namespace SortFolderBySize
     {
         private static string desktopIniName = "desktop.ini";
         //private static string RootPath = @"D:\Things to backup monthly\test";
-        private static string Line1 = "[.ShellClassInfo]";
-        private static string Line2 = "[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]";
-        private static string Line3 = "Prop5=31,FolderTag";
-        private static string Line4 = "Prop2=31,Title";
-        private static string MagicCommentForCreatedFiles = "; DangerCouldBeMyMiddleNameButItsJohn";
-        private static string MagicCommentForAppendedFiles = "; WatchMrRobotNoW";
+
 
         private static string CalculateFolderSizeCommand = "c";
         private static string RemoveFolderTagsCommand = "r";
