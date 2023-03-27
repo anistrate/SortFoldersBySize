@@ -16,9 +16,10 @@ namespace SortFoldersBySize.Services
     {
         private IFileSystem _fileSystem;
         private const string DesktopIniFile = "/desktop.ini";
+        private const string FolderTagLine = "Prop5=31,FolderTag";
         private string[] DesktopIniLines = new string[] { "[.ShellClassInfo]"
                                                                   ,"[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]"
-                                                                  ,"Prop5=31,FolderTag"
+                                                                  , FolderTagLine
                                                                   ,"Prop2=31,Title"
                                                                   ,MagicCommentForCreatedFiles
                                                                   };
@@ -72,10 +73,10 @@ namespace SortFoldersBySize.Services
                 switch(folderTagCase)
                 {
                     case FolderTagCase.DesktopIniNotExist:
-                        CreateDesktopIniForFolder(directory.Key, directory.Value);
+                        var resultCreate = CreateDesktopIniForFolder(directory.Key, directory.Value);
                         break;
                     case FolderTagCase.DesktopIniCreatedByThis:
-
+                        var resultModify = ModifyDesktopIniFileCreatedbyThis(directory.Key, directory.Value);
                         break;
 
                     case FolderTagCase.DesktopIniCreatedBySystem:
@@ -94,30 +95,37 @@ namespace SortFoldersBySize.Services
 
         public Result CreateDesktopIniForFolder(string path, long size)
         {
+
             _fileSystem.File.Create(path + DesktopIniFile);
-            var fileLines = 
+            var desktopIniContent = GetDesktopIniFileContent(size);
+            _fileSystem.File.WriteAllLines(path + DesktopIniFile, desktopIniContent);
 
-                using (var stream = new StreamWriter(File.Create(filePath)))
-                {
-                    stream.WriteLine(Line1);
-                    stream.WriteLine(Line2);
-                    stream.WriteLine(Line3.Replace("FolderTag", FormatSizeinKB(size).ToString()));
-                    stream.WriteLine(Line4.Replace("Title", FormatSizeinKB(size).ToString("N0") + " KB"));
-                    stream.WriteLine(MagicCommentForCreatedFiles);
-                }
-                //ForceWindowsExplorerToShowTag(folder);
-                File.SetAttributes(folder, FileAttributes.ReadOnly);
+
+            //investigate
+            //File.SetAttributes(folder, FileAttributes.ReadOnly);
+            return Result.Ok();
         }
 
-        private string[] GetDesktopIniFileLines(long size)
+        public Result ModifyDesktopIniFileCreatedbyThis(string path, long newSize)
         {
-            DesktopIniLines[2] = DesktopIniLines[2].Replace("FolderTag", FormatSizeinKB(size).ToString());
-            return DesktopIniLines;
-            // or 
-            return DesktopIniLines.Select(x => x.Replace("FolderTag", FormatSizeinKB(size).ToString())).ToArray();
+            var desktopIniContent = _fileSystem.File.ReadAllLines(path + DesktopIniFile);
+            desktopIniContent[2] = FolderTagLine.Replace("FolderTag", FormatSizeinKB(newSize));
+            _fileSystem.File.WriteAllLines(path + DesktopIniFile, desktopIniContent);
+
+            //investigate
+            //File.SetAttributes(folder, FileAttributes.ReadOnly);
+            return Result.Ok();
+
         }
 
-        private static long FormatSizeinKB(long size) => size > 1000 ? size / 1000 : 1;
+        private string[] GetDesktopIniFileContent(long size)
+        {
+            DesktopIniLines[2] = DesktopIniLines[2].Replace("FolderTag", FormatSizeinKB(size));
+            //stream.WriteLine(Line4.Replace("Title", FormatSizeinKB(size).ToString("N0") + " KB"));
+            return DesktopIniLines;
+        }
+
+        private string FormatSizeinKB(long size) => size > 1000 ? (size/1000).ToString() : "1";
 
         public FolderTagCase GetFolderTagCase(string path)
         {
