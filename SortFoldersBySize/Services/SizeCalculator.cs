@@ -80,7 +80,7 @@ namespace SortFoldersBySize.Services
                         break;
 
                     case FolderTagCase.DesktopIniCreatedBySystem:
-
+                        var resultCreatedBySystem = ModifyDesktopIniFileCreatedbySystem(directory.Key, directory.Value);
                         break;
                     case FolderTagCase.DesktopIniModifiedByThis:
 
@@ -100,7 +100,6 @@ namespace SortFoldersBySize.Services
             var desktopIniContent = GetDesktopIniFileContent(size);
             _fileSystem.File.WriteAllLines(path + DesktopIniFile, desktopIniContent);
 
-
             //investigate
             //File.SetAttributes(folder, FileAttributes.ReadOnly);
             return Result.Ok();
@@ -109,6 +108,26 @@ namespace SortFoldersBySize.Services
         public Result ModifyDesktopIniFileCreatedbyThis(string path, long newSize)
         {
             var desktopIniContent = _fileSystem.File.ReadAllLines(path + DesktopIniFile);
+            desktopIniContent[2] = FolderTagLine.Replace("FolderTag", FormatSizeinKB(newSize));
+            _fileSystem.File.WriteAllLines(path + DesktopIniFile, desktopIniContent);
+
+            //investigate
+            //File.SetAttributes(folder, FileAttributes.ReadOnly);
+            return Result.Ok();
+
+        }
+
+        public Result ModifyDesktopIniFileCreatedbySystem(string path, long size)
+        {
+            var desktopIniSystemContent = _fileSystem.File.ReadAllLines(path + DesktopIniFile);
+            for(int i =0; i< desktopIniSystemContent.Length; i++)
+            {
+                desktopIniSystemContent[0] = ';' + desktopIniSystemContent[0];
+            }
+            _fileSystem.File.WriteAllLines(path + DesktopIniFile, desktopIniSystemContent)
+
+            var desktopIniNewContent = GetDesktopIniFileContent(size);
+
             desktopIniContent[2] = FolderTagLine.Replace("FolderTag", FormatSizeinKB(newSize));
             _fileSystem.File.WriteAllLines(path + DesktopIniFile, desktopIniContent);
 
