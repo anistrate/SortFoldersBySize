@@ -34,19 +34,13 @@ namespace SortFolderBySize
         private readonly CommandInterpreter interpreter = new CommandInterpreter();
         public SortFolders(IFileSystem fileSystem)
         {
-
             sizeCalculator = new SizeCalculator(fileSystem);
-        }
-
-        public Result<CommandArgs> InterpretCommand(string[] args)
-        {
-            return interpreter.InterpretCommand(args);
         }
 
         static void Main(string[] args)
         {
-            var sortFolders = new SortFolders(new FileSystem());
-            var argResult = sortFolders.InterpretCommand(args);
+            var programInstance = new SortFolders(new FileSystem());
+            var argResult = programInstance.interpreter.InterpretCommand(args);
 
             if(argResult.IsFailure)
             {
@@ -58,18 +52,18 @@ namespace SortFolderBySize
             }
 
             var command = argResult.Value;
-            var folderResult = sortFolders.sizeCalculator.FolderExists(command.RootPath);
+            var folderExistsResult = programInstance.sizeCalculator.FolderExists(command.RootPath);
 
-            if(folderResult.IsFailure)
+            if(folderExistsResult.IsFailure)
             {
                 //TODO
                 //to use windows tray notifications
                 //also consider a log file
-                Console.WriteLine(folderResult.Error);
+                Console.WriteLine(folderExistsResult.Error);
                 return;
             }
 
-            var commandResult = sortFolders.sizeCalculator.InterpretCommand(command);
+            var commandResult = programInstance.sizeCalculator.ExecuteCommand(command);
             
             if(commandResult.IsFailure)
             {
@@ -78,16 +72,17 @@ namespace SortFolderBySize
 
             //TODO add a -help or --help command??
 
-            
+            //args = new string[2];
+            //args[0] = @"D:\Things to backup monthly\test";
+            //args[1] = "c";
 
-            args = new string[2];
-            args[0] = @"D:\Things to backup monthly\test";
-            args[1] = "c";
+            /*
 
             try
             { 
                 if (args[1] == CalculateFolderSizeCommand)
                 {
+                    sizeCalculator.ExecuteCommand()
                     var directoriesDictionary = CalculateFolderSizes(RootPath);
                     AddFolderTags(directoriesDictionary);
                     ForceWindowsExplorerToShowTag(RootPath);
@@ -105,11 +100,12 @@ namespace SortFolderBySize
                 Console.WriteLine(ex.Message);
                 Console.ReadLine();
             }
-            
+            */
 
 
         }
 
+        /*
         private static void RemoveFolderTags(string path)
         {
             string[] directories = Directory.GetDirectories(path);
@@ -118,8 +114,9 @@ namespace SortFolderBySize
                 RemoveTagForFolder(directory);
             }
         }
-
-        private static void AddFolderTags(Dictionary<string, long> directoriesDictionary)
+        */
+        
+        /*private static void AddFolderTags(Dictionary<string, long> directoriesDictionary)
         {
             
             foreach (var dic in directoriesDictionary)
@@ -127,9 +124,9 @@ namespace SortFolderBySize
                 CreateDesktopIniFile(dic.Key, dic.Value);
             }
            
-        }
+        }*/
 
-
+        /*
         private static void CreateDesktopIniFile(string folder, long size)
         {
             string filePath = folder + "/" + desktopIniName;
@@ -200,7 +197,7 @@ namespace SortFolderBySize
         }
 
         private static long FormatSizeinKB(long size) => size > 1000 ? size / 1000 : 1;
-
+        */
         private static void ForceWindowsExplorerToShowTag(string folderPath)
         {
             Vanara.PInvoke.Shell32.SHFOLDERCUSTOMSETTINGS settings = new SHFOLDERCUSTOMSETTINGS();

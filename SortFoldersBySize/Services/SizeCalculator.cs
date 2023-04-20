@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
+using Vanara.Extensions.Reflection;
 using static Vanara.PInvoke.Ole32.PROPERTYKEY.System;
 using static Vanara.PInvoke.Shell32;
 
@@ -17,16 +19,20 @@ namespace SortFoldersBySize.Services
         private IFileSystem _fileSystem;
         private const string DesktopIniFile = "/desktop.ini";
         private const string FolderTagLine = "Prop5=31,FolderTag";
-        private string[] DesktopIniLines = new string[] { "[.ShellClassInfo]"
-                                                                  ,"[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]"
-                                                                  , FolderTagLine
-                                                                  ,"Prop2=31,Title"
-                                                                  ,MagicCommentForCreatedFiles
+        private string[] DesktopIniLines = new string[] { 
                                                                   };
+        private string[] GetDesktopIniLines()
+        {
+            return new string[]
+            {
+                "[.ShellClassInfo]",
+                "[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]",
+                FolderTagLine,
+                "Prop2=31,Title",
+                "theMagicComment"
+            };
 
-        private static string MagicCommentForCreatedFiles = "; DangerCouldBeMyMiddleNameButItsJohn";
-        private static string MagicCommentForAppendedFiles = "; WatchMrRobotNoW";
-
+        }
 
         private const string InvalidPath = "The specified path {0} does not exist or an error has occured trying to access it.";
         public SizeCalculator(IFileSystem fileSystem)
@@ -44,68 +50,88 @@ namespace SortFoldersBySize.Services
             return Result.Ok();
         }
 
-        public Result InterpretCommand(CommandArgs command)
+        public Result ExecuteCommand(CommandArgs command)
         {
+            Result result;
             switch(command.Command)
             {
                 case CommandConstants.Calculate:
                     var directoriesDictionary = CalculateFolderSizes(command.RootPath);
-                    var result = SetFolderTags(directoriesDictionary);
-                    return Result.Ok();
+                    result = SetFolderTags(directoriesDictionary);
                     break;
                 case CommandConstants.RemoveTags:
-
-                    return Result.Ok();
+                    result = RemoveFolderTags(command.RootPath);
                     break;
                 default:
                     throw new ArgumentException($"Invalid argument {command.Command}");
             }
-
-
+            return result;
         }
 
         public Result SetFolderTags(Dictionary<string, long> directories)
         {
             foreach(var directory in directories)
             {
-                var folderTagCase = GetFolderTagCase(directory + DesktopIniFile);
-
-                switch(folderTagCase)
-                {
-                    case FolderTagCase.DesktopIniNotExist:
-                        var resultCreate = CreateDesktopIniForFolder(directory.Key, directory.Value);
-                        break;
-                    case FolderTagCase.DesktopIniCreatedByThis:
-                        var resultModify = ModifyDesktopIniFileCreatedbyThis(directory.Key, directory.Value);
-                        break;
-
-                    case FolderTagCase.DesktopIniCreatedBySystem:
-                        var resultCreatedBySystem = ModifyDesktopIniFileCreatedbySystem(directory.Key, directory.Value);
-                        break;
-                    case FolderTagCase.DesktopIniModifiedByThis:
-
-                        break;
-                    default:
-                        throw new ArgumentException($"Invalid argument {folderTagCase}");
-                }
+                var path = directory.Key + DesktopIniFile;
+                var folderTagCase = GetFolderTagCase(path);
+                SetFolderTagsByCase(path, directory.Value, folderTagCase);
             }
 
             return Result.Ok();
         }
 
-        public Result CreateDesktopIniForFolder(string path, long size)
+        public Result SetFolderTagsByCase(string path, long size, FolderTagCase folderTagCase )
+        {
+            Result result;
+            switch (folderTagCase)
+            {
+                case FolderTagCase.DesktopIniNotExist:
+                    result = CreateNewDesktopIniForFolder(path, size);
+                    break;
+                case FolderTagCase.DesktopIniCreatedByProgram:
+                    result = CreateNewDesktopIniForFolder(path, size);
+                    //var resultModify = ModifyDesktopIniFileCreatedbyProgram(directory.Key, directory.Value);
+                    break;
+
+                case FolderTagCase.DesktopIniCreatedBySystem:
+                    result = ModifyDesktopIniCreatedbySystem(path, size);
+                    break;
+
+                case FolderTagCase.DesktopIniCreatedBySystemModifiedByProgram:
+                    result = ModifyDesktopIniCreatedBySystemModifiedByProgram(path, size);
+                    break;
+                default:
+                    throw new ArgumentException($"Invalid argument {folderTagCase}");
+            }
+            return result;
+        }
+
+        public Result ModifyDesktopIniCreatedBySystemModifiedByProgram(string path, long size)
+        {
+            var desktopIniSystemModifiedContent = _fileSystem.File.ReadAllLines(path);
+            var desktopIniSystemOriginalContent = desktopIniSystemModifiedContent.Where(x => x.StartsWith(';')
+                                                                                           && x != MagiGStrings.ForAppendedFiles).ToArray();
+            _fileSystem.File.WriteAllLines(path, desktopIniSystemOriginalContent);
+
+            var desktopIniNewContent = GetDesktopIniFileContent(size, MagiGStrings.ForAppendedFiles);
+            _fileSystem.File.AppendAllLines(path, desktopIniNewContent);
+
+            return Result.Ok();
+        }
+
+        public Result CreateNewDesktopIniForFolder(string path, long size)
         {
 
-            _fileSystem.File.Create(path + DesktopIniFile);
-            var desktopIniContent = GetDesktopIniFileContent(size);
-            _fileSystem.File.WriteAllLines(path + DesktopIniFile, desktopIniContent);
+            _fileSystem.File.Create(path);
+            var desktopIniContent = GetDesktopIniFileContent(size, MagiGStrings.ForCreatedFiles);
+            _fileSystem.File.WriteAllLines(path, desktopIniContent);
 
             //investigate
             //File.SetAttributes(folder, FileAttributes.ReadOnly);
             return Result.Ok();
         }
 
-        public Result ModifyDesktopIniFileCreatedbyThis(string path, long newSize)
+        public Result ModifyDesktopIniFileCreatedbyProgram(string path, long newSize)
         {
             var desktopIniContent = _fileSystem.File.ReadAllLines(path + DesktopIniFile);
             desktopIniContent[2] = FolderTagLine.Replace("FolderTag", FormatSizeinKB(newSize));
@@ -117,19 +143,17 @@ namespace SortFoldersBySize.Services
 
         }
 
-        public Result ModifyDesktopIniFileCreatedbySystem(string path, long size)
+        public Result ModifyDesktopIniCreatedbySystem(string path, long size)
         {
-            var desktopIniSystemContent = _fileSystem.File.ReadAllLines(path + DesktopIniFile);
+            var desktopIniSystemContent = _fileSystem.File.ReadAllLines(path);
             for(int i =0; i< desktopIniSystemContent.Length; i++)
             {
                 desktopIniSystemContent[0] = ';' + desktopIniSystemContent[0];
             }
-            _fileSystem.File.WriteAllLines(path + DesktopIniFile, desktopIniSystemContent)
+            _fileSystem.File.WriteAllLines(path, desktopIniSystemContent);
 
-            var desktopIniNewContent = GetDesktopIniFileContent(size);
-
-            desktopIniContent[2] = FolderTagLine.Replace("FolderTag", FormatSizeinKB(newSize));
-            _fileSystem.File.WriteAllLines(path + DesktopIniFile, desktopIniContent);
+            var desktopIniNewContent = GetDesktopIniFileContent(size , MagiGStrings.ForAppendedFiles);
+            _fileSystem.File.AppendAllLines(path, desktopIniNewContent);
 
             //investigate
             //File.SetAttributes(folder, FileAttributes.ReadOnly);
@@ -137,9 +161,11 @@ namespace SortFoldersBySize.Services
 
         }
 
-        private string[] GetDesktopIniFileContent(long size)
+        private string[] GetDesktopIniFileContent(long size, string magicComment)
         {
-            DesktopIniLines[2] = DesktopIniLines[2].Replace("FolderTag", FormatSizeinKB(size));
+            var desktopIniLines = GetDesktopIniLines();
+            desktopIniLines[2] = desktopIniLines[2].Replace("FolderTag", FormatSizeinKB(size));
+            desktopIniLines[4] = magicComment;
             //stream.WriteLine(Line4.Replace("Title", FormatSizeinKB(size).ToString("N0") + " KB"));
             return DesktopIniLines;
         }
@@ -154,8 +180,8 @@ namespace SortFoldersBySize.Services
             using var reader = new StreamReader(path);
             var content = reader.ReadToEnd();
 
-            if (content.Contains(MagiGStrings.MagicCommentForCreatedFiles)) return FolderTagCase.DesktopIniCreatedByThis;
-            if (content.Contains(MagiGStrings.MagicCommentForModifiedFiles)) return FolderTagCase.DesktopIniModifiedByThis;
+            if (content.Contains(MagiGStrings.ForCreatedFiles)) return FolderTagCase.DesktopIniCreatedByProgram;
+            if (content.Contains(MagiGStrings.ForAppendedFiles)) return FolderTagCase.DesktopIniCreatedBySystemModifiedByProgram;
 
             return FolderTagCase.DesktopIniCreatedBySystem;
 
@@ -183,9 +209,61 @@ namespace SortFoldersBySize.Services
             return folderSize;
         }
 
-        public void RemoveFolderTags(string path)
+        public Result RemoveFolderTags(string mainFolderPath)
         {
+            string[] directories = _fileSystem.Directory.GetDirectories(mainFolderPath);
+            foreach (string directory in directories)
+            {
+                var path = directory + DesktopIniFile;
+                var folderTagCase = GetFolderTagCase(path);
+                RemoveDesktopIniByCase(path, folderTagCase);
+            }
+
+            return Result.Ok();
+        }
+
+        public Result RemoveDesktopIniByCase(string path, FolderTagCase folderTagCase)
+        {
+            Result result;
+            switch (folderTagCase)
+            {
+                case FolderTagCase.DesktopIniNotExist:
+                    //Basically do nothing?
+                    result = Result.Ok();
+                    break;
+                case FolderTagCase.DesktopIniCreatedByProgram:
+                    result = RemoveDesktopIniCreatedByProgram(path);
+                    break;
+
+                case FolderTagCase.DesktopIniCreatedBySystem:
+                    //Basically do nothing?
+                    result = Result.Ok();
+                    break;
+                case FolderTagCase.DesktopIniCreatedBySystemModifiedByProgram:
+                    result = CleanDesktopIniFromProgramTagInfo(path);
+                    break;
+                default:
+                    throw new ArgumentException($"Invalid argument {folderTagCase}");
+            }
+            return result;
+        }
+
+        public Result RemoveDesktopIniCreatedByProgram(string path)
+        {
+            _fileSystem.File.Delete(path);
+            return Result.Ok();
+        }
+
+        public Result CleanDesktopIniFromProgramTagInfo(string path)
+        {
+            var desktopIniCurrentContent = _fileSystem.File.ReadAllLines(path);
+            var desktopIniOriginalContent = desktopIniCurrentContent.Where(x => x[0] == ';' &&
+                                                                            x != MagiGStrings.ForAppendedFiles).ToArray();
+            _fileSystem.File.WriteAllLines(path, desktopIniOriginalContent);
+
+            return Result.Ok();
 
         }
+
     }
 }

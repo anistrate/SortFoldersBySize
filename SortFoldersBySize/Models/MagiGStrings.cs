@@ -8,7 +8,7 @@ namespace SortFoldersBySize.Models
 {
     public static class MagiGStrings
     {
-        public static string MagicCommentForCreatedFiles = "; DangerCouldBeMyMiddleNameButItsJohn";
-        public static string MagicCommentForModifiedFiles = "; WatchMrRobotNoW";
+        public static string ForCreatedFiles = "; DangerCouldBeMyMiddleNameButItsJohn";
+        public static string ForAppendedFiles = "; WatchMrRobotNoW";
     }
 }

@@ -10,7 +10,7 @@ namespace SortFoldersBySize.Models
     {
         DesktopIniNotExist = 0,
         DesktopIniCreatedBySystem,
-        DesktopIniCreatedByThis,
-        DesktopIniModifiedByThis
+        DesktopIniCreatedByProgram,
+        DesktopIniCreatedBySystemModifiedByProgram
     }
 }
