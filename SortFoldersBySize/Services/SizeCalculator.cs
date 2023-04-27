@@ -17,10 +17,11 @@ namespace SortFoldersBySize.Services
     public  class SizeCalculator
     {
         private IFileSystem _fileSystem;
-        private const string DesktopIniFile = "/desktop.ini";
+        private const string DesktopIniFile = "\\desktop.ini";
         private const string FolderTagLine = "Prop5=31,FolderTag";
-        private string[] DesktopIniLines = new string[] { 
-                                                                  };
+        private const string FolderTitleLine = "Prop2=31,FolderTitle";
+        private const string InvalidPath = "The specified path {0} does not exist or an error has occured trying to access it.";
+
         private string[] GetDesktopIniLines()
         {
             return new string[]
@@ -28,13 +29,11 @@ namespace SortFoldersBySize.Services
                 "[.ShellClassInfo]",
                 "[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]",
                 FolderTagLine,
-                "Prop2=31,Title",
+                FolderTitleLine,
                 "theMagicComment"
             };
 
         }
-
-        private const string InvalidPath = "The specified path {0} does not exist or an error has occured trying to access it.";
         public SizeCalculator(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
@@ -90,7 +89,6 @@ namespace SortFoldersBySize.Services
                     break;
                 case FolderTagCase.DesktopIniCreatedByProgram:
                     result = CreateNewDesktopIniForFolder(path, size);
-                    //var resultModify = ModifyDesktopIniFileCreatedbyProgram(directory.Key, directory.Value);
                     break;
 
                 case FolderTagCase.DesktopIniCreatedBySystem:
@@ -110,7 +108,7 @@ namespace SortFoldersBySize.Services
         {
             var desktopIniSystemModifiedContent = _fileSystem.File.ReadAllLines(path);
             var desktopIniSystemOriginalContent = desktopIniSystemModifiedContent.Where(x => x.StartsWith(';')
-                                                                                           && x != MagiGStrings.ForAppendedFiles).ToArray();
+                                                                                          && x != MagiGStrings.ForAppendedFiles).ToArray();
             _fileSystem.File.WriteAllLines(path, desktopIniSystemOriginalContent);
 
             var desktopIniNewContent = GetDesktopIniFileContent(size, MagiGStrings.ForAppendedFiles);
@@ -121,8 +119,6 @@ namespace SortFoldersBySize.Services
 
         public Result CreateNewDesktopIniForFolder(string path, long size)
         {
-
-            _fileSystem.File.Create(path);
             var desktopIniContent = GetDesktopIniFileContent(size, MagiGStrings.ForCreatedFiles);
             _fileSystem.File.WriteAllLines(path, desktopIniContent);
 
@@ -133,14 +129,16 @@ namespace SortFoldersBySize.Services
 
         public Result ModifyDesktopIniFileCreatedbyProgram(string path, long newSize)
         {
+            var sizeInKb = FormatSizeinKB(newSize);
+
             var desktopIniContent = _fileSystem.File.ReadAllLines(path + DesktopIniFile);
-            desktopIniContent[2] = FolderTagLine.Replace("FolderTag", FormatSizeinKB(newSize));
+            desktopIniContent[2] = FolderTagLine.Replace("FolderTag", sizeInKb.ToString());
+            desktopIniContent[3] = FolderTitleLine.Replace("FolderTitle", FormatSizeInLargestUnit(sizeInKb));
             _fileSystem.File.WriteAllLines(path + DesktopIniFile, desktopIniContent);
 
             //investigate
             //File.SetAttributes(folder, FileAttributes.ReadOnly);
             return Result.Ok();
-
         }
 
         public Result ModifyDesktopIniCreatedbySystem(string path, long size)
@@ -148,7 +146,7 @@ namespace SortFoldersBySize.Services
             var desktopIniSystemContent = _fileSystem.File.ReadAllLines(path);
             for(int i =0; i< desktopIniSystemContent.Length; i++)
             {
-                desktopIniSystemContent[0] = ';' + desktopIniSystemContent[0];
+                desktopIniSystemContent[i] = ';' + desktopIniSystemContent[i];
             }
             _fileSystem.File.WriteAllLines(path, desktopIniSystemContent);
 
@@ -163,14 +161,32 @@ namespace SortFoldersBySize.Services
 
         private string[] GetDesktopIniFileContent(long size, string magicComment)
         {
+            var sizeInKb = FormatSizeinKB(size);
+
             var desktopIniLines = GetDesktopIniLines();
-            desktopIniLines[2] = desktopIniLines[2].Replace("FolderTag", FormatSizeinKB(size));
+            desktopIniLines[2] = desktopIniLines[2].Replace("FolderTag", sizeInKb.ToString());
+            desktopIniLines[3] = desktopIniLines[3].Replace("FolderTitle", FormatSizeInLargestUnit(sizeInKb));
             desktopIniLines[4] = magicComment;
-            //stream.WriteLine(Line4.Replace("Title", FormatSizeinKB(size).ToString("N0") + " KB"));
-            return DesktopIniLines;
+
+            return desktopIniLines;
         }
 
-        private string FormatSizeinKB(long size) => size > 1000 ? (size/1000).ToString() : "1";
+        private long FormatSizeinKB(long size) => size > 1000 ? size/1000 : 1;
+
+        private string FormatSizeInLargestUnit(long kilobytes)
+        {
+            double size = kilobytes;
+            string[] units = { "KB", "MB", "GB" };
+
+            int unitIndex = 0;
+            while (size >= 1024 && unitIndex < units.Length - 1)
+            {
+                size /= 1024;
+                unitIndex++;
+            }
+
+            return $"{size:0.##} {units[unitIndex]}";
+        }
 
         public FolderTagCase GetFolderTagCase(string path)
         {
@@ -257,8 +273,9 @@ namespace SortFoldersBySize.Services
         public Result CleanDesktopIniFromProgramTagInfo(string path)
         {
             var desktopIniCurrentContent = _fileSystem.File.ReadAllLines(path);
-            var desktopIniOriginalContent = desktopIniCurrentContent.Where(x => x[0] == ';' &&
-                                                                            x != MagiGStrings.ForAppendedFiles).ToArray();
+            var desktopIniOriginalContent = desktopIniCurrentContent.Where(x => x[0] == ';' && x != MagiGStrings.ForAppendedFiles)
+                                                                    .Select( x => x.Substring(1,x.Length-1))
+                                                                    .ToArray();
             _fileSystem.File.WriteAllLines(path, desktopIniOriginalContent);
 
             return Result.Ok();

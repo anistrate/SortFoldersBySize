@@ -4,10 +4,12 @@ namespace SortFoldersBySize.Tests
 {
     public class CommandInterpreterShould
     {
+        private CommandInterpreter commandInterpreter;
+
         [SetUp]
         public void Setup()
         {
-
+            commandInterpreter = new CommandInterpreter();
         }
 
         [Test]
@@ -15,7 +17,6 @@ namespace SortFoldersBySize.Tests
         {
             var args = Stubs.GetArgsCalculateCorrect();
             var expectedResult = Stubs.GetCalculateCommand();
-            var commandInterpreter = new CommandInterpreter();
             var result = commandInterpreter.InterpretCommand(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
@@ -27,7 +28,6 @@ namespace SortFoldersBySize.Tests
         {
             var args = Stubs.GetArgsCalculateUppercaseCorrect();
             var expectedResult = Stubs.GetCalculateCommand();
-            var commandInterpreter = new CommandInterpreter();
             var result = commandInterpreter.InterpretCommand(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
@@ -40,7 +40,6 @@ namespace SortFoldersBySize.Tests
         {
             var args = Stubs.GetArgsRemoveCorrect();
             var expectedResult = Stubs.GetRemoveCommand();
-            var commandInterpreter = new CommandInterpreter();
             var result = commandInterpreter.InterpretCommand(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
@@ -52,7 +51,6 @@ namespace SortFoldersBySize.Tests
         {
             var args = Stubs.GetArgsIncorrectCommand();
             var expectedResult = Stubs.GetIncorrectCommandResult();
-            var commandInterpreter = new CommandInterpreter();
             var result = commandInterpreter.InterpretCommand(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
@@ -64,7 +62,6 @@ namespace SortFoldersBySize.Tests
         {
             var args = Stubs.GetArgsMoreThan2();
             var expectedResult = Stubs.GetIncorrectNumberOfArgumentsResult(args.Length);
-            var commandInterpreter = new CommandInterpreter();
             var result = commandInterpreter.InterpretCommand(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
@@ -76,7 +73,6 @@ namespace SortFoldersBySize.Tests
         {
             var args = Stubs.GetArgsOnlyOne();
             var expectedResult = Stubs.GetIncorrectNumberOfArgumentsResult(args.Length);
-            var commandInterpreter = new CommandInterpreter();
             var result = commandInterpreter.InterpretCommand(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));

@@ -2,7 +2,7 @@
   "profiles": {
     "SortFoldersBySize": {
       "commandName": "Project",
-      "commandLineArgs": "\"D:\\Things to backup monthly\\test_2\"\r\nC",
+      "commandLineArgs": "\"D:\\Things to backup monthly\\test_2\"\r\nR",
       "workingDirectory": "D:\\Things to backup monthly\\test_2"
     }
   }
