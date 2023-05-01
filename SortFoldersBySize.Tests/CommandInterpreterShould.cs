@@ -1,3 +1,4 @@
+using SortFoldersBySize.Models;
 using SortFoldersBySize.Services;
 
 namespace SortFoldersBySize.Tests
@@ -12,55 +13,38 @@ namespace SortFoldersBySize.Tests
             commandInterpreter = new CommandInterpreter();
         }
 
-        [Test]
-        public void InterpretCommand_validargs_returnsCalculateCommand()
+        [TestCase("c", CommandConstants.Calculate)]
+        [TestCase("C", CommandConstants.Calculate)]
+        [TestCase("r", CommandConstants.RemoveTags)]
+        [TestCase("R", CommandConstants.RemoveTags)]
+        public void InterpretCommand_validargs_returnsCommand(string commandShorthand, string command)
         {
-            var args = Stubs.GetArgsCalculateCorrect();
-            var expectedResult = Stubs.GetCalculateCommand();
+            var args = Stubs.GetArgsCalculateCorrect(commandShorthand);
+            var expectedResult = Stubs.GetCommand(command);
             var result = commandInterpreter.InterpretCommand(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
             Assert.That(expectedResult.Value, Is.EqualTo(result.Value));
         }
 
-        [Test]
-        public void InterpretCommand_ValidArgsUpperCase_ReturnsCalculateCommand()
+        [TestCase("i")]
+        [TestCase("incorrect")]
+        [TestCase("testtest")]
+        public void InterpretCommand_invalidargs_returnsResultFailure(string commandShorthand)
         {
-            var args = Stubs.GetArgsCalculateUppercaseCorrect();
-            var expectedResult = Stubs.GetCalculateCommand();
-            var result = commandInterpreter.InterpretCommand(args);
-
-            Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
-            Assert.That(expectedResult.Value, Is.EqualTo(result.Value));
-        }
-
-
-        [Test]
-        public void InterpretCommand_validargs_returnsRemoveCommand()
-        {
-            var args = Stubs.GetArgsRemoveCorrect();
-            var expectedResult = Stubs.GetRemoveCommand();
-            var result = commandInterpreter.InterpretCommand(args);
-
-            Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
-            Assert.That(expectedResult.Value, Is.EqualTo(result.Value));
-        }
-
-        [Test]
-        public void InterpretCommand_invalidargs_returnsResultFailure()
-        {
-            var args = Stubs.GetArgsIncorrectCommand();
-            var expectedResult = Stubs.GetIncorrectCommandResult();
+            var args = Stubs.GetArgsIncorrectCommand(commandShorthand);
+            var expectedResult = Stubs.GetIncorrectCommandResult(commandShorthand);
             var result = commandInterpreter.InterpretCommand(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
             Assert.That(expectedResult.Error, Is.EqualTo(result.Error));
         }
 
-        [Test]
-        public void InterpretCommand_toomanyargs_returnsResultFailure()
+        [TestCase("i1", "i2")]
+        [TestCase("incorrectCommand1", "incorrectCommand2")]
+        public void InterpretCommand_toomanyargs_returnsResultFailure(string incorrectCommand1, string incorrectCommand2)
         {
-            var args = Stubs.GetArgsMoreThan2();
+            var args = Stubs.GetArgsMoreThan2(incorrectCommand1, incorrectCommand2);
             var expectedResult = Stubs.GetIncorrectNumberOfArgumentsResult(args.Length);
             var result = commandInterpreter.InterpretCommand(args);
 

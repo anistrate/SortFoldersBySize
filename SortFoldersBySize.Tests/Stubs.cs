@@ -5,25 +5,15 @@ namespace SortFoldersBySize.Tests
     public static class Stubs
     {
         private static string DefaultPath = "D:/";
-        private static string CalculateCommand = "c";
-        private static string RemoveCommand = "r";
-        private static string IncorrectCommand_i = "i";
-        private static string CalculateCommandUpperCase = "C";
 
-
-        public static Result<CommandArgs> GetCalculateCommand()
+        public static Result<CommandArgs> GetCommand(string command)
         {
-            return Result.Ok<CommandArgs>(new CommandArgs(CommandConstants.Calculate, DefaultPath));
+            return Result.Ok(new CommandArgs(command, DefaultPath));
         }
 
-        public static Result<CommandArgs> GetRemoveCommand()
+        public static Result<CommandArgs> GetIncorrectCommandResult(string incorrectCommand)
         {
-            return Result.Ok<CommandArgs>(new CommandArgs(CommandConstants.RemoveTags, DefaultPath));
-        }
-
-        public static Result<CommandArgs> GetIncorrectCommandResult()
-        {
-            return Result.Fail<CommandArgs>(string.Format(CommandErrorMessages.InvalidParameter, IncorrectCommand_i));
+            return Result.Fail<CommandArgs>(string.Format(CommandErrorMessages.InvalidParameter, incorrectCommand));
         }
 
         public static Result<CommandArgs> GetIncorrectNumberOfArgumentsResult(int numberOfArguments)
@@ -31,39 +21,25 @@ namespace SortFoldersBySize.Tests
             return Result.Fail<CommandArgs>(string.Format(CommandErrorMessages.IncorrectNumberOfArguments, numberOfArguments));
         }
 
-        public static string[] GetArgsCalculateCorrect()
+        public static string[] GetArgsCalculateCorrect(string calculateCommand)
         {
-            return new string[] { DefaultPath, CalculateCommand };
+            return new string[] { DefaultPath, calculateCommand };
         }
 
-        public static string[] GetArgsCalculateUppercaseCorrect()
+        public static string[] GetArgsIncorrectCommand(string incorrectCommand)
         {
-            return new string[] { DefaultPath, CalculateCommandUpperCase };
+            return new string[] { DefaultPath, incorrectCommand };
         }
 
-        public static string[] GetArgsRemoveCorrect()
+        public static string[] GetArgsMoreThan2(string incorrectCommand1, string incorrectCommand2)
         {
-            return new string[] { DefaultPath, RemoveCommand };
-        }
-
-        public static string[] GetArgsIncorrectCommand()
-        {
-            return new string[] { DefaultPath, IncorrectCommand_i };
-        }
-
-        public static string[] GetArgsMoreThan2()
-        {
-            return new string[] { DefaultPath, IncorrectCommand_i, IncorrectCommand_i };
+            return new string[] { DefaultPath, incorrectCommand1, incorrectCommand2 };
         }
 
         public static string[] GetArgsOnlyOne()
         {
             return new string[] { DefaultPath};
         }
-
-
-
-
 
     }
 }
