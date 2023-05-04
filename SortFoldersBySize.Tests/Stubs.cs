@@ -13,12 +13,12 @@ namespace SortFoldersBySize.Tests
 
         public static Result<CommandArgs> GetIncorrectCommandResult(string incorrectCommand)
         {
-            return Result.Fail<CommandArgs>(string.Format(CommandErrorMessages.InvalidParameter, incorrectCommand));
+            return Result.Fail<CommandArgs>(string.Format(ErrorMessages.InvalidParameter, incorrectCommand));
         }
 
         public static Result<CommandArgs> GetIncorrectNumberOfArgumentsResult(int numberOfArguments)
         {
-            return Result.Fail<CommandArgs>(string.Format(CommandErrorMessages.IncorrectNumberOfArguments, numberOfArguments));
+            return Result.Fail<CommandArgs>(string.Format(ErrorMessages.IncorrectNumberOfArguments, numberOfArguments));
         }
 
         public static string[] GetArgsCalculateCorrect(string calculateCommand)

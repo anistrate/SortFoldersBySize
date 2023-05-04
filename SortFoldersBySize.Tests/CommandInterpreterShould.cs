@@ -5,12 +5,12 @@ namespace SortFoldersBySize.Tests
 {
     public class CommandInterpreterShould
     {
-        private CommandInterpreter commandInterpreter;
+        private ArgumentParser commandInterpreter;
 
         [SetUp]
         public void Setup()
         {
-            commandInterpreter = new CommandInterpreter();
+            commandInterpreter = new ArgumentParser();
         }
 
         [TestCase("c", CommandConstants.Calculate)]
@@ -21,7 +21,7 @@ namespace SortFoldersBySize.Tests
         {
             var args = Stubs.GetArgsCalculateCorrect(commandShorthand);
             var expectedResult = Stubs.GetCommand(command);
-            var result = commandInterpreter.InterpretCommand(args);
+            var result = commandInterpreter.ParseArguments(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
             Assert.That(expectedResult.Value, Is.EqualTo(result.Value));
@@ -34,7 +34,7 @@ namespace SortFoldersBySize.Tests
         {
             var args = Stubs.GetArgsIncorrectCommand(commandShorthand);
             var expectedResult = Stubs.GetIncorrectCommandResult(commandShorthand);
-            var result = commandInterpreter.InterpretCommand(args);
+            var result = commandInterpreter.ParseArguments(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
             Assert.That(expectedResult.Error, Is.EqualTo(result.Error));
@@ -46,7 +46,7 @@ namespace SortFoldersBySize.Tests
         {
             var args = Stubs.GetArgsMoreThan2(incorrectCommand1, incorrectCommand2);
             var expectedResult = Stubs.GetIncorrectNumberOfArgumentsResult(args.Length);
-            var result = commandInterpreter.InterpretCommand(args);
+            var result = commandInterpreter.ParseArguments(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
             Assert.That(expectedResult.Error, Is.EqualTo(result.Error));
@@ -57,7 +57,7 @@ namespace SortFoldersBySize.Tests
         {
             var args = Stubs.GetArgsOnlyOne();
             var expectedResult = Stubs.GetIncorrectNumberOfArgumentsResult(args.Length);
-            var result = commandInterpreter.InterpretCommand(args);
+            var result = commandInterpreter.ParseArguments(args);
 
             Assert.That(expectedResult.IsSuccess, Is.EqualTo(result.IsSuccess));
             Assert.That(expectedResult.Error, Is.EqualTo(result.Error));

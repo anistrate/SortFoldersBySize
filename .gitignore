@@ -400,10 +400,13 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .vs/SortFoldersBySize/DesignTimeBuild/.dtbcache.v2
-.vs/SortFoldersBySize/v17/.futdcache.v2
 .vs/SortFoldersBySize/v17/.suo
 .vs/SortFoldersBySize/v17/TestStore/0/testlog.manifest
 .vs/ProjectEvaluation/sortfoldersbysize.metadata.v6.1
 .vs/ProjectEvaluation/sortfoldersbysize.projects.v6.1
 .vs/SortFoldersBySize/v17/.futdcache.v2
 SortFoldersBySize.Tests/bin/Debug/net6.0/nunit_random_seed.tmp
+SortFoldersBySize.Tests/obj/Debug/net6.0/SortFoldersBySize.Tests.assets.cache
+SortFoldersBySize/obj/Debug/net6.0/SortFoldersBySize.assets.cache
+SortFoldersBySize/obj/Debug/net6.0/SortFoldersBySize.csproj.FileListAbsolute.txt
+SortFoldersBySize.Tests/obj/Debug/net6.0/SortFoldersBySize.Tests.csproj.FileListAbsolute.txt

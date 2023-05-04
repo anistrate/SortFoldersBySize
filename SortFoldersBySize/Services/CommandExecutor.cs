@@ -14,13 +14,14 @@ using static Vanara.PInvoke.Shell32;
 
 namespace SortFoldersBySize.Services
 {
-    public  class SizeCalculator
+    public  class CommandExecutor
     {
         private IFileSystem _fileSystem;
+        private FolderSizeCalculator _folderSizeCalculator;
+
         private const string DesktopIniFile = "\\desktop.ini";
         private const string FolderTagLine = "Prop5=31,FolderTag";
         private const string FolderTitleLine = "Prop2=31,FolderTitle";
-        private const string InvalidPath = "The specified path {0} does not exist or an error has occured trying to access it.";
 
         private string[] GetDesktopIniLines()
         {
@@ -34,16 +35,18 @@ namespace SortFoldersBySize.Services
             };
 
         }
-        public SizeCalculator(IFileSystem fileSystem)
+        public CommandExecutor(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
+            _folderSizeCalculator = new FolderSizeCalculator(fileSystem);
         }
 
         public Result FolderExists(string path)
         {
+            path = null;
             if (!_fileSystem.Directory.Exists(path))
             {
-                return Result.Fail(string.Format(InvalidPath, path));
+                return Result.Fail(string.Format(ErrorMessages.InvalidPath, path));
             }
 
             return Result.Ok();
@@ -55,7 +58,7 @@ namespace SortFoldersBySize.Services
             switch(command.Command)
             {
                 case CommandConstants.Calculate:
-                    var directoriesDictionary = CalculateFolderSizes(command.RootPath);
+                    var directoriesDictionary = _folderSizeCalculator.CalculateFolderSizes(command.RootPath);
                     result = SetFolderTags(directoriesDictionary);
                     break;
                 case CommandConstants.RemoveTags:
@@ -203,27 +206,7 @@ namespace SortFoldersBySize.Services
 
         }
 
-        public Dictionary<string, long> CalculateFolderSizes(string path)
-        {
-            var directoriesDictionary = new Dictionary<string, long>();
-            string[] directories = _fileSystem.Directory.GetDirectories(path);
-            foreach (string directory in directories)
-            {
-                directoriesDictionary.Add(directory, GetFolderSize(directory));
-            }
-            return directoriesDictionary;
-        }
-
-        public long GetFolderSize(string folderPath)
-        {
-            long folderSize = 0;
-            var dirInfo = _fileSystem.DirectoryInfo.New(folderPath);
-            foreach (var fi in dirInfo.GetFiles("*", SearchOption.AllDirectories))
-            {
-                folderSize += fi.Length;
-            }
-            return folderSize;
-        }
+        
 
         public Result RemoveFolderTags(string mainFolderPath)
         {

@@ -8,15 +8,15 @@ using System.IO.Abstractions;
 
 namespace SortFoldersBySize.Services
 {
-    public class CommandInterpreter
+    public class ArgumentParser
     {
 
-        public Result<CommandArgs> InterpretCommand(string[] args)
+        public Result<CommandArgs> ParseArguments(string[] args)
         {
 
             if(args.Length != 2)
             {
-                return Result.Fail<CommandArgs>(string.Format(CommandErrorMessages.IncorrectNumberOfArguments, args.Length) );
+                return Result.Fail<CommandArgs>(string.Format(ErrorMessages.IncorrectNumberOfArguments, args.Length) );
             }
 
             if (args[1]=="c" || args[1] == "C")
@@ -29,7 +29,7 @@ namespace SortFoldersBySize.Services
                 return Result.Ok(new CommandArgs(CommandConstants.RemoveTags, args[0]));
             }
 
-            return Result.Fail<CommandArgs>(string.Format(CommandErrorMessages.InvalidParameter, args[1]));
+            return Result.Fail<CommandArgs>(string.Format(ErrorMessages.InvalidParameter, args[1]));
             
         }
 

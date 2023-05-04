@@ -1,4 +1,5 @@
-﻿using SortFoldersBySize.Services;
+﻿using SortFoldersBySize.Models;
+using SortFoldersBySize.Services;
 using System;
 using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
@@ -10,10 +11,11 @@ namespace SortFoldersBySize.Tests
 {
     public class SizeCalculatorShould
     {
-        private SizeCalculator sizeCalculator;
+        private CommandExecutor sizeCalculator;
         private string existingPath1 = @"c:\\MyFolder1\\";
         private string existingPath2 = @"c:\\MyFolder2\\MyFolder2\\MyFolder2\\MyFolder2";
 
+        private MockFileSystem _fileSystem;
 
         [SetUp]
         public void Setup()
@@ -23,7 +25,9 @@ namespace SortFoldersBySize.Tests
                 {existingPath1, new MockDirectoryData() },
                 {existingPath2, new MockDirectoryData() }
             });
-            sizeCalculator = new SizeCalculator(fileSystem);
+            sizeCalculator = new CommandExecutor(fileSystem);
+
+            _fileSystem = new MockFileSystem();
         }
 
         [TestCase(@"c:\\MyFolder1\\")]
@@ -41,10 +45,8 @@ namespace SortFoldersBySize.Tests
             var actual = sizeCalculator.FolderExists(path);
 
             Assert.That(actual.IsSuccess, Is.EqualTo(false));
-            Assert.That(actual.Error, Is.EqualTo(""));
+            Assert.That(actual.Error, Is.EqualTo(string.Format(ErrorMessages.InvalidPath, path)));
         }
-
-
 
     }
 }
