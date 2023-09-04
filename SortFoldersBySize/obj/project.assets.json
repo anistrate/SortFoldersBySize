@@ -1448,11 +1448,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Things to backup monthly\\Github\\SortFoldersBySize\\SortFoldersBySize\\SortFoldersBySize\\SortFoldersBySize.csproj",
+      "projectUniqueName": "F:\\Github\\SortFoldersBySize\\SortFoldersBySize\\SortFoldersBySize.csproj",
       "projectName": "SortFoldersBySize",
-      "projectPath": "D:\\Things to backup monthly\\Github\\SortFoldersBySize\\SortFoldersBySize\\SortFoldersBySize\\SortFoldersBySize.csproj",
+      "projectPath": "F:\\Github\\SortFoldersBySize\\SortFoldersBySize\\SortFoldersBySize.csproj",
       "packagesPath": "C:\\Users\\ist_a\\.nuget\\packages\\",
-      "outputPath": "D:\\Things to backup monthly\\Github\\SortFoldersBySize\\SortFoldersBySize\\SortFoldersBySize\\obj\\",
+      "outputPath": "F:\\Github\\SortFoldersBySize\\SortFoldersBySize\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ist_a\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1516,7 +1516,7 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.Windows.SDK.NET.Ref",
-            "version": "[10.0.17763.28, 10.0.17763.28]"
+            "version": "[10.0.17763.29, 10.0.17763.29]"
           }
         ],
         "frameworkReferences": {
@@ -1527,7 +1527,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }

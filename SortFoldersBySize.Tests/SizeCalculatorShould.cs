@@ -32,6 +32,7 @@ namespace SortFoldersBySize.Tests
 
         [TestCase(@"c:\\MyFolder1\\")]
         [TestCase(@"c:\\MyFolder2\\")]
+        [TestCase(@"c:\\MyFolder2\\MyFolder2\\MyFolder2\\MyFolder2")]
         public void FolderExists_validArgs_ReturnSuccess(string path)
         {
             var actual = sizeCalculator.FolderExists(path);
@@ -40,6 +41,7 @@ namespace SortFoldersBySize.Tests
         }
 
         [TestCase(@"c:\\NonExistentFolder2\\")]
+        [TestCase(null)]
         public void FolderExists_invalidArgs_ReturnFailure(string path)
         {
             var actual = sizeCalculator.FolderExists(path);

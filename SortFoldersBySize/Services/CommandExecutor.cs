@@ -43,7 +43,6 @@ namespace SortFoldersBySize.Services
 
         public Result FolderExists(string path)
         {
-            path = null;
             if (!_fileSystem.Directory.Exists(path))
             {
                 return Result.Fail(string.Format(ErrorMessages.InvalidPath, path));
@@ -59,7 +58,7 @@ namespace SortFoldersBySize.Services
             {
                 case CommandConstants.Calculate:
                     var directoriesDictionary = _folderSizeCalculator.CalculateFolderSizes(command.RootPath);
-                    result = SetFolderTags(directoriesDictionary);
+                    result = SetTagsForFolders(directoriesDictionary);
                     break;
                 case CommandConstants.RemoveTags:
                     result = RemoveFolderTags(command.RootPath);
@@ -70,7 +69,7 @@ namespace SortFoldersBySize.Services
             return result;
         }
 
-        public Result SetFolderTags(Dictionary<string, long> directories)
+        public Result SetTagsForFolders(Dictionary<string, long> directories)
         {
             foreach(var directory in directories)
             {
