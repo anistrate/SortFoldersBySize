@@ -15,8 +15,6 @@ namespace SortFoldersBySize.Tests
         private string existingPath1 = @"c:\\MyFolder1\\";
         private string existingPath2 = @"c:\\MyFolder2\\MyFolder2\\MyFolder2\\MyFolder2";
 
-        private MockFileSystem _fileSystem;
-
         [SetUp]
         public void Setup()
         {
@@ -27,7 +25,6 @@ namespace SortFoldersBySize.Tests
             });
             sizeCalculator = new CommandExecutor(fileSystem);
 
-            _fileSystem = new MockFileSystem();
         }
 
         [TestCase(@"c:\\MyFolder1\\")]
