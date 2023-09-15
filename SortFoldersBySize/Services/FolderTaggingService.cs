@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SortFoldersBySize.Services
 {
-    public class FolderTagService
+    public class FolderTaggingService
     {
         private readonly IFileSystem _fileSystem;
         private const string DesktopIniFile = "\\desktop.ini";
@@ -28,7 +28,7 @@ namespace SortFoldersBySize.Services
 
         }
 
-        public FolderTagService(IFileSystem fileSystem)
+        public FolderTaggingService(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
         }
@@ -168,8 +168,6 @@ namespace SortFoldersBySize.Services
             return FolderTagCase.DesktopIniCreatedBySystem;
 
         }
-
-
 
         public Result RemoveFolderTags(string mainFolderPath)
         {

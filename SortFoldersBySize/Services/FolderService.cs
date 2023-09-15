@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SortFoldersBySize.Models;
+using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
@@ -7,16 +8,26 @@ using System.Threading.Tasks;
 
 namespace SortFoldersBySize.Services
 {
-    public class FolderSizeCalculator
+    public class FolderService
     {
         private readonly IFileSystem _fileSystem;
 
-        public FolderSizeCalculator(IFileSystem fileSystem)
+        public FolderService(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
         }
 
-        public Dictionary<string, long> CalculateFolderSizes(string path)
+        public Result FolderExists(string path)
+        {
+            if (!_fileSystem.Directory.Exists(path))
+            {
+                return Result.Fail(string.Format(ErrorMessages.InvalidPath, path));
+            }
+
+            return Result.Ok();
+        }
+
+        public Dictionary<string, long> GetSizesForFoldersAtPath(string path)
         {
             var directoriesDictionary = new Dictionary<string, long>();
             string[] directories = _fileSystem.Directory.GetDirectories(path);

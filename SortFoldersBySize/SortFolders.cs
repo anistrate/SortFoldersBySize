@@ -16,11 +16,15 @@ namespace SortFolderBySize
 
     public class SortFolders
     {
-        private readonly CommandExecutor sizeCalculator;
-        private readonly ArgumentParser argumentParser = new ArgumentParser();
-        public SortFolders(IFileSystem fileSystem)
+
+        public readonly ArgumentParser argumentParser = new ArgumentParser();
+        public readonly FolderService folderService;
+        public readonly FolderTaggingService folderTagService;
+        public SortFolders(IFileSystem fileSystem, FolderService _folderService = null, FolderTaggingService _folderTaggingService = null)
         {
-            sizeCalculator = new CommandExecutor(fileSystem);
+            folderService = _folderService ?? new FolderService(fileSystem);
+            folderTagService = _folderTaggingService ?? new FolderTaggingService(fileSystem);
+            argumentParser = new ArgumentParser();
         }
 
         static void Main(string[] args)
@@ -42,7 +46,7 @@ namespace SortFolderBySize
             }
 
             var command = argResult.Value;
-            var folderExistsResult = programInstance.sizeCalculator.FolderExists(command.RootPath);
+            var folderExistsResult = programInstance.folderService.FolderExists(command.RootPath);
 
             if (folderExistsResult.IsFailure)
             {
@@ -52,14 +56,36 @@ namespace SortFolderBySize
                 return;
             }
 
-            var commandResult = programInstance.sizeCalculator.ExecuteCommand(command);
+            var commandResult = programInstance.ExecuteCommand(command);
 
             if (commandResult.IsSuccess)
             {
                 EvilHackToForceWindowsExplorerToRefreshTheTags(command.RootPath);
             }
+            else
+            {
+                //the fuck do we do here??
+            }
 
             //TODO add a -help or --help command??
+        }
+
+        private Result ExecuteCommand(CommandArgs command)
+        {
+            Result result;
+            switch (command.Command)
+            {
+                case CommandConstants.Calculate:
+                    var directoriesDictionary = folderService.GetSizesForFoldersAtPath(command.RootPath);
+                    result = folderTagService.SetTagsForFolders(directoriesDictionary);
+                    break;
+                case CommandConstants.RemoveTags:
+                    result = folderTagService.RemoveFolderTags(command.RootPath);
+                    break;
+                default:
+                    throw new ArgumentException($"Invalid argument {command.Command}");
+            }
+            return result;
         }
 
         private static void EvilHackToForceWindowsExplorerToRefreshTheTags(string folderPath)

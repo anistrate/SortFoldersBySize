@@ -3,7 +3,7 @@ using SortFoldersBySize.Services;
 
 namespace SortFoldersBySize.Tests
 {
-    public class CommandInterpreterShould
+    public class ArgumentParserShould
     {
         private ArgumentParser commandInterpreter;
 
