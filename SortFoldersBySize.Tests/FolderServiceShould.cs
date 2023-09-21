@@ -1,12 +1,6 @@
 ﻿using SortFoldersBySize.Models;
 using SortFoldersBySize.Services;
-using System;
-using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Foundation.Collections;
 
 namespace SortFoldersBySize.Tests
 {
@@ -16,6 +10,7 @@ namespace SortFoldersBySize.Tests
         private FolderService _folderService;
         private const string existingPath1 = @"c:\\MyFolder1\\";
         private const string existingPath2 = @"c:\\MyFolder2\\MyFolder2\\MyFolder2\\MyFolder2";
+        private const string veryLongExistingPath = @"c:\\MyFolder1\\Test Data\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath\\VeryLongPath";
         private const string test_file1 = @"F:\Github\SortFoldersBySize\SortFoldersBySize.Tests\Test Data\test_data1.txt";
         private const string test_file2 = @"F:\Github\SortFoldersBySize\SortFoldersBySize.Tests\Test Data\test_data2.txt";
         private const string test_file3 = @"F:\Github\SortFoldersBySize\SortFoldersBySize.Tests\Test Data\test_data3.txt";
@@ -26,7 +21,6 @@ namespace SortFoldersBySize.Tests
         private const string testFilePath3 = @"c:\\MyFolder1\\Test Data\\Folder2\\test_data3.txt";
         private const string testFilePath4 = @"c:\\MyFolder1\\Test Data\\Folder2\\test_data4.txt";
         private const string testEmptyFolder = @"c:\\MyFolder1\\Test Data\\Folder3\\";
-
 
         private MockFileSystem _fileSystem;
 
@@ -54,7 +48,8 @@ namespace SortFoldersBySize.Tests
                 {testFilePath2, mockFile2 },
                 {testFilePath3, mockFile3 },
                 {testFilePath4, mockFile4 },
-                {testEmptyFolder, new MockDirectoryData() }
+                {testEmptyFolder, new MockDirectoryData() },
+                {veryLongExistingPath,new  MockDirectoryData() }
             });
             _folderService = new FolderService(_fileSystem);
 
@@ -63,6 +58,7 @@ namespace SortFoldersBySize.Tests
         [TestCase(@"c:\\MyFolder1\\")]
         [TestCase(@"c:\\MyFolder2\\")]
         [TestCase(@"c:\\MyFolder2\\MyFolder2\\MyFolder2\\MyFolder2")]
+        [TestCase(veryLongExistingPath)]
         public void FolderExists_Right(string path)
         {
             var actual = _folderService.FolderExists(path);
@@ -72,6 +68,7 @@ namespace SortFoldersBySize.Tests
 
         [TestCase(@"c:\\NonExistentFolder2\\")]
         [TestCase(null)]
+        [TestCase("")]
         public void FolderExists_Wrong(string path)
         {
             var actual = _folderService.FolderExists(path);
@@ -102,19 +99,46 @@ namespace SortFoldersBySize.Tests
             Assert.Throws<DirectoryNotFoundException>(() => _folderService.GetFolderSize(path));
         }
 
+        [TestCase("")]
+        public void GetFolderSize_Wrong_EmptyString(string path)
+        {
+            Assert.Throws<ArgumentException>(() => _folderService.GetFolderSize(path));
+        }
+
         [TestCase(@"c:\\MyFolder1\\Test Data\\")]
         public void GetSizesForFoldersAtPath_Right(string path)
         {
             var expected = new Dictionary<string, long>()
             {
-                { "Folder2", 4657 },
-                { "Folder3", 0 }
+                { "c:\\MyFolder1\\Test Data\\Folder2", 4657 },
+                { "c:\\MyFolder1\\Test Data\\Folder3", 0 },
+                { "c:\\MyFolder1\\Test Data\\VeryLongPath", 0 }
             };
 
             var actual = _folderService.GetSizesForFoldersAtPath(path);
 
-            Assert.That(actual, Is.EqualTo(expected));
+            Assert.That(actual, Is.EquivalentTo(expected));
         }
+
+        [TestCase(@"c:\\MyFolder1\\NonexistentFolder\\")]
+        [TestCase(veryLongExistingPath + "//NonExistentFolder")]
+        public void GetSizesForFoldersAtPath_Wrong_NonExistentFolder(string path)
+        {
+            Assert.Throws<DirectoryNotFoundException>(() => _folderService.GetSizesForFoldersAtPath(path));
+        }
+
+        [TestCase("")]
+        public void GetSizesForFoldersAtPath_Wrong_Empty(string path)
+        {
+            Assert.Throws<ArgumentException>(() => _folderService.GetSizesForFoldersAtPath(path));
+        }
+
+        [TestCase(null)]
+        public void GetSizesForFoldersAtPath_Wrong_Null(string path)
+        {
+            Assert.Throws<ArgumentNullException>(() => _folderService.GetSizesForFoldersAtPath(path));
+        }
+
 
     }
 }
