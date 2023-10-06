@@ -40,6 +40,8 @@ namespace SortFoldersBySize.Tests
             using var stream4 = new StreamReader(test_file4);
             var mockFile4 = new MockFileData(stream4.ReadToEnd());
 
+            var mockFolder = new MockDirectoryData();
+
             _fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {existingPath1, new MockDirectoryData() },

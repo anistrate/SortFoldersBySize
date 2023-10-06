@@ -6,22 +6,6 @@ namespace SortFoldersBySize.Services
     public class FolderTaggingService
     {
         private readonly IFileSystem _fileSystem;
-        private const string DesktopIniFile = "\\desktop.ini";
-        private const string FolderTagLine = "Prop5=31,FolderTag";
-        private const string FolderTitleLine = "Prop2=31,FolderTitle";
-
-        private string[] GetDesktopIniLines()
-        {
-            return new string[]
-            {
-                "[.ShellClassInfo]",
-                "[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]",
-                FolderTagLine,
-                FolderTitleLine,
-                "theMagicComment"
-            };
-
-        }
 
         public FolderTaggingService(IFileSystem fileSystem)
         {
@@ -32,7 +16,7 @@ namespace SortFoldersBySize.Services
         {
             foreach (var directory in directories)
             {
-                var path = directory.Key + DesktopIniFile;
+                var path = directory.Key + FolderTaggingHelper.DesktopIniFile;
                 var folderTagCase = GetFolderTagCase(path);
                 SetFolderTagsByCase(path, directory.Value, folderTagCase);
             }
@@ -72,7 +56,7 @@ namespace SortFoldersBySize.Services
                                                                                           && x != MagiGStrings.ForAppendedFiles).ToArray();
             _fileSystem.File.WriteAllLines(path, desktopIniSystemOriginalContent);
 
-            var desktopIniNewContent = GetDesktopIniFileContent(size, MagiGStrings.ForAppendedFiles);
+            var desktopIniNewContent = FolderTaggingHelper.GetDesktopIniFileContent(size, MagiGStrings.ForAppendedFiles);
             _fileSystem.File.AppendAllLines(path, desktopIniNewContent);
 
             return Result.Ok();
@@ -80,7 +64,7 @@ namespace SortFoldersBySize.Services
 
         public Result CreateNewDesktopIniForFolder(string path, long size)
         {
-            var desktopIniContent = GetDesktopIniFileContent(size, MagiGStrings.ForCreatedFiles);
+            var desktopIniContent = FolderTaggingHelper.GetDesktopIniFileContent(size, MagiGStrings.ForCreatedFiles);
             _fileSystem.File.WriteAllLines(path, desktopIniContent);
 
             //investigate
@@ -90,12 +74,12 @@ namespace SortFoldersBySize.Services
 
         public Result ModifyDesktopIniFileCreatedbyProgram(string path, long newSize)
         {
-            var sizeInKb = FormatSizeinKB(newSize);
+            var sizeInKb = FolderTaggingHelper.FormatSizeinKB(newSize);
 
-            var desktopIniContent = _fileSystem.File.ReadAllLines(path + DesktopIniFile);
-            desktopIniContent[2] = FolderTagLine.Replace("FolderTag", sizeInKb.ToString());
-            desktopIniContent[3] = FolderTitleLine.Replace("FolderTitle", FormatSizeInLargestUnit(sizeInKb));
-            _fileSystem.File.WriteAllLines(path + DesktopIniFile, desktopIniContent);
+            var desktopIniContent = _fileSystem.File.ReadAllLines(path + FolderTaggingHelper.DesktopIniFile);
+            desktopIniContent[2] = FolderTaggingHelper.FolderTagLine.Replace("FolderTag", sizeInKb.ToString());
+            desktopIniContent[3] = FolderTaggingHelper.FolderTitleLine.Replace("FolderTitle", FolderTaggingHelper.FormatSizeInLargestUnit(sizeInKb));
+            _fileSystem.File.WriteAllLines(path + FolderTaggingHelper.DesktopIniFile, desktopIniContent);
 
             //investigate
             //File.SetAttributes(folder, FileAttributes.ReadOnly);
@@ -111,42 +95,13 @@ namespace SortFoldersBySize.Services
             }
             _fileSystem.File.WriteAllLines(path, desktopIniSystemContent);
 
-            var desktopIniNewContent = GetDesktopIniFileContent(size, MagiGStrings.ForAppendedFiles);
+            var desktopIniNewContent = FolderTaggingHelper.GetDesktopIniFileContent(size, MagiGStrings.ForAppendedFiles);
             _fileSystem.File.AppendAllLines(path, desktopIniNewContent);
 
             //investigate
             //File.SetAttributes(folder, FileAttributes.ReadOnly);
             return Result.Ok();
 
-        }
-
-        private string[] GetDesktopIniFileContent(long size, string magicComment)
-        {
-            var sizeInKb = FormatSizeinKB(size);
-
-            var desktopIniLines = GetDesktopIniLines();
-            desktopIniLines[2] = desktopIniLines[2].Replace("FolderTag", sizeInKb.ToString());
-            desktopIniLines[3] = desktopIniLines[3].Replace("FolderTitle", FormatSizeInLargestUnit(sizeInKb));
-            desktopIniLines[4] = magicComment;
-
-            return desktopIniLines;
-        }
-
-        private long FormatSizeinKB(long size) => size > 1000 ? size / 1000 : 1;
-
-        private string FormatSizeInLargestUnit(long kilobytes)
-        {
-            double size = kilobytes;
-            string[] units = { "KB", "MB", "GB" };
-
-            int unitIndex = 0;
-            while (size >= 1024 && unitIndex < units.Length - 1)
-            {
-                size /= 1024;
-                unitIndex++;
-            }
-
-            return $"{size:0.##} {units[unitIndex]}";
         }
 
         public FolderTagCase GetFolderTagCase(string path)
@@ -169,7 +124,7 @@ namespace SortFoldersBySize.Services
             string[] directories = _fileSystem.Directory.GetDirectories(mainFolderPath);
             foreach (string directory in directories)
             {
-                var path = directory + DesktopIniFile;
+                var path = directory + FolderTaggingHelper.DesktopIniFile;
                 var folderTagCase = GetFolderTagCase(path);
                 RemoveDesktopIniByCase(path, folderTagCase);
             }
