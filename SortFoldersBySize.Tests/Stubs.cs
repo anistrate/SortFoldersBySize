@@ -1,4 +1,6 @@
 ﻿using SortFoldersBySize.Models;
+using System.IO.Abstractions.TestingHelpers;
+using System.Text;
 
 namespace SortFoldersBySize.Tests
 {
@@ -39,6 +41,17 @@ namespace SortFoldersBySize.Tests
         public static string[] GetArgsOnlyOne()
         {
             return new string[] { DefaultPath};
+        }
+
+        public static MockFileData GetMockDesktopIniFile(long size)
+        {
+            var desktopIniContent = FolderTaggingHelper.GetDesktopIniFileContent(size, MagiGStrings.ForCreatedFiles);
+            var stringBuilder = new StringBuilder();
+            for (int i = 0; i < desktopIniContent.Length; i++)
+            {
+                stringBuilder.AppendLine(desktopIniContent[i]);
+            }
+            return new MockFileData(stringBuilder.ToString());
         }
 
     }

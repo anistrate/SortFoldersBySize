@@ -64,12 +64,23 @@ namespace SortFoldersBySize.Services
 
         public Result CreateNewDesktopIniForFolder(string path, long size)
         {
-            var desktopIniContent = FolderTaggingHelper.GetDesktopIniFileContent(size, MagiGStrings.ForCreatedFiles);
-            _fileSystem.File.WriteAllLines(path, desktopIniContent);
+            try
+            {
+                var desktopIniContent = FolderTaggingHelper.GetDesktopIniFileContent(size, MagiGStrings.ForCreatedFiles);
+                _fileSystem.File.WriteAllLines(path, desktopIniContent);
+                return Result.Ok();
+            }
+            catch(DirectoryNotFoundException dnfe)
+            {
+                return Result.Fail(dnfe.Message);
+            }
+            catch(UnauthorizedAccessException uae)
+            {
+                return Result.Fail(uae.Message);
+            }
 
             //investigate
             //File.SetAttributes(folder, FileAttributes.ReadOnly);
-            return Result.Ok();
         }
 
         public Result ModifyDesktopIniFileCreatedbyProgram(string path, long newSize)
