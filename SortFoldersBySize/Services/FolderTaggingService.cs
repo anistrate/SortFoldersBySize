@@ -83,6 +83,35 @@ namespace SortFoldersBySize.Services
             //File.SetAttributes(folder, FileAttributes.ReadOnly);
         }
 
+        public Result ModifyDesktopIniCreatedbySystem(string path, long size)
+        {
+            try
+            {
+                var desktopIniSystemContent = _fileSystem.File.ReadAllLines(path);
+                for (int i = 0; i < desktopIniSystemContent.Length; i++)
+                {
+                    desktopIniSystemContent[i] = ';' + desktopIniSystemContent[i];
+                }
+                _fileSystem.File.WriteAllLines(path, desktopIniSystemContent);
+
+                var desktopIniNewContent = FolderTaggingHelper.GetDesktopIniFileContent(size, MagiGStrings.ForAppendedFiles);
+                _fileSystem.File.AppendAllLines(path, desktopIniNewContent);
+
+                return Result.Ok();
+            }
+            catch (DirectoryNotFoundException dnfe)
+            {
+                return Result.Fail(dnfe.Message);
+            }
+            catch (UnauthorizedAccessException uae)
+            {
+                return Result.Fail(uae.Message);
+            }
+
+            //investigate
+            //File.SetAttributes(folder, FileAttributes.ReadOnly);
+        }
+
         public Result ModifyDesktopIniFileCreatedbyProgram(string path, long newSize)
         {
             var sizeInKb = FolderTaggingHelper.FormatSizeinKB(newSize);
@@ -95,24 +124,6 @@ namespace SortFoldersBySize.Services
             //investigate
             //File.SetAttributes(folder, FileAttributes.ReadOnly);
             return Result.Ok();
-        }
-
-        public Result ModifyDesktopIniCreatedbySystem(string path, long size)
-        {
-            var desktopIniSystemContent = _fileSystem.File.ReadAllLines(path);
-            for (int i = 0; i < desktopIniSystemContent.Length; i++)
-            {
-                desktopIniSystemContent[i] = ';' + desktopIniSystemContent[i];
-            }
-            _fileSystem.File.WriteAllLines(path, desktopIniSystemContent);
-
-            var desktopIniNewContent = FolderTaggingHelper.GetDesktopIniFileContent(size, MagiGStrings.ForAppendedFiles);
-            _fileSystem.File.AppendAllLines(path, desktopIniNewContent);
-
-            //investigate
-            //File.SetAttributes(folder, FileAttributes.ReadOnly);
-            return Result.Ok();
-
         }
 
         public FolderTagCase GetFolderTagCase(string path)

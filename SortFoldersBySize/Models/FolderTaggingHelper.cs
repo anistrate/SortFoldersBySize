@@ -12,7 +12,7 @@ namespace SortFoldersBySize.Models
         public const string FolderTagLine = "Prop5=31,FolderTag";
         public const string FolderTitleLine = "Prop2=31,FolderTitle";
 
-        private static string[] GetDesktopIniLines()
+        public static string[] GetDesktopIniLines()
         {
             return new string[]
             {

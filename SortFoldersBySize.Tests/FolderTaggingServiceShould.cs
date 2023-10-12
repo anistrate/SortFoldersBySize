@@ -18,6 +18,8 @@ namespace SortFoldersBySize.Tests
 
         private const string existingDesktopIniPath30mb = @"c:\\MyFolder\desktop.ini";
         private const string existingDesktopIniPath0kb = @"c:\\MyFolder10\desktop.ini";
+        private const string existingDesktopIniPathCreatedBySystem1 = @"c:\\MyFolder11\desktop.ini";
+        private const string existingDesktopIniPathCreatedBySystem2 = @"c:\\MyFolder12\desktop.ini";
 
         private const string existingPath1 = @"c:\\MyFolder1\\";
         private const string existingPath2 = @"c:\\MyFolder2\\MyFolder2\\MyFolder2\\MyFolder2";
@@ -28,13 +30,18 @@ namespace SortFoldersBySize.Tests
         {
             var mockDesktopFile30mb = Stubs.GetMockDesktopIniFile(30000);
             var mockDesktopFile0mb = Stubs.GetMockDesktopIniFile(0);
+            var mockDesktopFileCreatedBySystem1 = Stubs.GetMockDesktopIniFileCreatedBySystem();
+            var mockDesktopFileCreatedBySystem2 = Stubs.GetMockDesktopIniFileCreatedBySystem();
 
             _mockFileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {existingPath1, new MockDirectoryData() },
                 {existingPath2, new MockDirectoryData() },
                 {existingDesktopIniPath30mb, mockDesktopFile30mb },
-                {existingDesktopIniPath0kb, mockDesktopFile0mb }
+                {existingDesktopIniPath0kb, mockDesktopFile0mb },
+                {existingDesktopIniPathCreatedBySystem1,  mockDesktopFileCreatedBySystem1},
+                {existingDesktopIniPathCreatedBySystem2,  mockDesktopFileCreatedBySystem2}
+
             });
             _folderTaggingService = new FolderTaggingService(_mockFileSystem);
             
@@ -70,7 +77,19 @@ namespace SortFoldersBySize.Tests
             Assert.Throws<ArgumentNullException>(() => _folderTaggingService.CreateNewDesktopIniForFolder(path,size));
         }
 
+        [TestCase(existingDesktopIniPathCreatedBySystem1, 30000, "30 KB")]
+        [TestCase(existingDesktopIniPathCreatedBySystem2, 0 , "0" )]
+        public void ModifyDesktopIniFileCreatedbyProgram_Correct(string path, long size, string expectedValue)
+        {
+            var result = _folderTaggingService.ModifyDesktopIniCreatedbySystem(path, size);
 
+            var actual = _mockFileSystem.GetFile(path).TextContents;
+            var expected = Stubs.GetMockDesktopIniCreatedBySystemAfterBeingModified(expectedValue);
+
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(_mockFileSystem.FileExists(path), Is.True);
+            Assert.That(actual, Is.EqualTo(expected));
+        }
 
 
     }

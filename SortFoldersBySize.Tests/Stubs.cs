@@ -54,5 +54,21 @@ namespace SortFoldersBySize.Tests
             return new MockFileData(stringBuilder.ToString());
         }
 
+        public static MockFileData GetMockDesktopIniFileCreatedBySystem()
+        {
+            var desktopIniContent = FolderTaggingHelper.GetDesktopIniLines();
+            var stringBuilder = new StringBuilder();
+            for (int i = 0; i < desktopIniContent.Length-1; i++)
+            {
+                stringBuilder.AppendLine(desktopIniContent[i]);
+            }
+            return new MockFileData(stringBuilder.ToString());
+        }
+
+        public static string GetMockDesktopIniCreatedBySystemAfterBeingModified(string value)
+        {
+            return ";[.ShellClassInfo]\r\n;[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\n;Prop5=31,FolderTag\r\n;Prop2=31,FolderTitle\r\n[.ShellClassInfo]\r\n[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\nProp5=31,30\r\nProp2=31,"+ value +"\r\n; WatchMrRobotNoW\r\n";
+        }
+
     }
 }
