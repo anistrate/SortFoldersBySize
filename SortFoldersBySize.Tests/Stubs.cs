@@ -43,9 +43,9 @@ namespace SortFoldersBySize.Tests
             return new string[] { DefaultPath};
         }
 
-        public static MockFileData GetMockDesktopIniFile(long size)
+        public static MockFileData GetMockDesktopIniFile(long size , string magicComment )
         {
-            var desktopIniContent = FolderTaggingHelper.GetDesktopIniFileContent(size, MagiGStrings.ForCreatedFiles);
+            var desktopIniContent = FolderTaggingHelper.GetDesktopIniFileContent(size, magicComment);
             var stringBuilder = new StringBuilder();
             for (int i = 0; i < desktopIniContent.Length; i++)
             {
@@ -65,9 +65,9 @@ namespace SortFoldersBySize.Tests
             return new MockFileData(stringBuilder.ToString());
         }
 
-        public static string GetMockDesktopIniCreatedBySystemAfterBeingModified(string value)
+        public static string GetMockDesktopIniCreatedBySystemAfterBeingModified(string value, string unit)
         {
-            return ";[.ShellClassInfo]\r\n;[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\n;Prop5=31,FolderTag\r\n;Prop2=31,FolderTitle\r\n[.ShellClassInfo]\r\n[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\nProp5=31,30\r\nProp2=31,"+ value +"\r\n; WatchMrRobotNoW\r\n";
+            return ";[.ShellClassInfo]\r\n;[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\n;Prop5=31,FolderTag\r\n;Prop2=31,FolderTitle\r\n[.ShellClassInfo]\r\n[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\nProp5=31,"+value+"\r\nProp2=31,"+ value + " " + unit +"\r\n; WatchMrRobotNoW\r\n";
         }
 
     }

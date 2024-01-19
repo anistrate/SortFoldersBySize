@@ -54,6 +54,7 @@ namespace SortFoldersBySize.Models
 
         public static long FormatSizeinKB(long size)
         {
+            if (size < 0) throw new ArgumentException("Folder size can't be negative");
             if (size > 1000) return size / 1000;
             else if (size == 0) return 0;
             else return 1;

@@ -25,6 +25,6 @@ namespace SortFoldersBySize.Models
             return this.Command == cmd.Command
                 && this.RootPath == cmd.RootPath;
         }
-
+        
     }
 }
