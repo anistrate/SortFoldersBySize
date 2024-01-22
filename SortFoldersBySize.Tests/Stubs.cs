@@ -40,10 +40,10 @@ namespace SortFoldersBySize.Tests
 
         public static string[] GetArgsOnlyOne()
         {
-            return new string[] { DefaultPath};
+            return new string[] { DefaultPath };
         }
 
-        public static MockFileData GetMockDesktopIniFile(long size , string magicComment )
+        public static MockFileData GetMockDesktopIniFile(long size, string magicComment)
         {
             var desktopIniContent = FolderTaggingHelper.GetDesktopIniFileContent(size, magicComment);
             var stringBuilder = new StringBuilder();
@@ -58,17 +58,22 @@ namespace SortFoldersBySize.Tests
         {
             var desktopIniContent = FolderTaggingHelper.GetDesktopIniLines();
             var stringBuilder = new StringBuilder();
-            for (int i = 0; i < desktopIniContent.Length-1; i++)
+            for (int i = 0; i < desktopIniContent.Length - 1; i++)
             {
                 stringBuilder.AppendLine(desktopIniContent[i]);
             }
             return new MockFileData(stringBuilder.ToString());
         }
 
-        public static string GetMockDesktopIniCreatedBySystemAfterBeingModified(string value, string unit)
+        public static string GetMockDesktopIniCreatedBySystemAfterBeingModified(string kbValue, string largestUnitvalue, string unit)
         {
-            return ";[.ShellClassInfo]\r\n;[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\n;Prop5=31,FolderTag\r\n;Prop2=31,FolderTitle\r\n[.ShellClassInfo]\r\n[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\nProp5=31,"+value+"\r\nProp2=31,"+ value + " " + unit +"\r\n; WatchMrRobotNoW\r\n";
+            return ";[.ShellClassInfo]\r\n;[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\n;Prop5=31,FolderTag\r\n;Prop2=31,FolderTitle\r\n[.ShellClassInfo]\r\n[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\nProp5=31," + kbValue + "\r\nProp2=31," + largestUnitvalue + " " + unit + "\r\n; WatchMrRobotNoW\r\n";
         }
+        //public static string GetMockDesktopIniCreatedBySystemAfterBeingModified(string value, string unit)
+        //{
+        //    return ";[.ShellClassInfo]\r\n;[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\n;Prop5=31,FolderTag\r\n;Prop2=31,FolderTitle\\r\\n[.ShellClassInfo]\\r\\n[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\\r\\nProp5=31,\"+value+\"\\r\\nProp2=31,\"+ value + \" \" + unit +\"\\r\\n; WatchMrRobotNoW\\r\\n\";";
+        //}
+
 
     }
 }

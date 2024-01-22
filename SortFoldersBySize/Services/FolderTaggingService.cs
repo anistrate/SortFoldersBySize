@@ -119,16 +119,31 @@ namespace SortFoldersBySize.Services
         }
 
         public Result ModifyDesktopIniCreatedBySystemModifiedByProgram(string path, long size)
-        {
-            var desktopIniSystemModifiedContent = _fileSystem.File.ReadAllLines(path);
-            var desktopIniSystemOriginalContent = desktopIniSystemModifiedContent.Where(x => x.StartsWith(';')
-                                                                                          && x != MagiGStrings.ForAppendedFiles).ToArray();
-            _fileSystem.File.WriteAllLines(path, desktopIniSystemOriginalContent);
+        {   
+            try
+            {
+                var desktopIniSystemModifiedContent = _fileSystem.File.ReadAllLines(path);
+                var desktopIniSystemOriginalContent = desktopIniSystemModifiedContent.Where(x => x.StartsWith(';')
+                                                                                              && x != MagiGStrings.ForAppendedFiles).ToArray();
+                _fileSystem.File.WriteAllLines(path, desktopIniSystemOriginalContent);
 
-            var desktopIniNewContent = FolderTaggingHelper.GetDesktopIniFileContent(size, MagiGStrings.ForAppendedFiles);
-            _fileSystem.File.AppendAllLines(path, desktopIniNewContent);
+                var desktopIniNewContent = FolderTaggingHelper.GetDesktopIniFileContent(size, MagiGStrings.ForAppendedFiles);
+                _fileSystem.File.AppendAllLines(path, desktopIniNewContent);
 
-            return Result.Ok();
+                return Result.Ok();
+            }
+            catch (DirectoryNotFoundException dnfe)
+            {
+                return Result.Fail(dnfe.Message);
+            }
+            catch (UnauthorizedAccessException uae)
+            {
+                return Result.Fail(uae.Message);
+            }
+            catch (FileNotFoundException fne)
+            {
+                return Result.Fail(fne.Message);
+            }
         }
 
         /*
@@ -188,8 +203,19 @@ namespace SortFoldersBySize.Services
 
         public Result RemoveDesktopIniCreatedByProgram(string path)
         {
-            _fileSystem.File.Delete(path);
-            return Result.Ok();
+            try
+            {
+                _fileSystem.File.Delete(path);
+                return Result.Ok();
+            }
+            catch (DirectoryNotFoundException dnfe)
+            {
+                return Result.Fail(dnfe.Message);
+            }
+            catch (UnauthorizedAccessException uae)
+            {
+                return Result.Fail(uae.Message);
+            }
         }
 
         public Result CleanDesktopIniFromProgramTagInfo(string path)
