@@ -69,10 +69,11 @@ namespace SortFoldersBySize.Tests
         {
             return ";[.ShellClassInfo]\r\n;[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\n;Prop5=31,FolderTag\r\n;Prop2=31,FolderTitle\r\n[.ShellClassInfo]\r\n[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\nProp5=31," + kbValue + "\r\nProp2=31," + largestUnitvalue + " " + unit + "\r\n; WatchMrRobotNoW\r\n";
         }
-        //public static string GetMockDesktopIniCreatedBySystemAfterBeingModified(string value, string unit)
-        //{
-        //    return ";[.ShellClassInfo]\r\n;[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\n;Prop5=31,FolderTag\r\n;Prop2=31,FolderTitle\\r\\n[.ShellClassInfo]\\r\\n[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\\r\\nProp5=31,\"+value+\"\\r\\nProp2=31,\"+ value + \" \" + unit +\"\\r\\n; WatchMrRobotNoW\\r\\n\";";
-        //}
+
+        public static string GetMockDesktopIniCreatedBySystemBeforeBeingModified()
+        {
+            return "[.ShellClassInfo]\r\n[{F29F85E0-4FF9-1068-AB91-08002B27B3D9}]\r\nProp5=31,FolderTag\r\nProp2=31,FolderTitle\r\n";
+        }
 
 
     }

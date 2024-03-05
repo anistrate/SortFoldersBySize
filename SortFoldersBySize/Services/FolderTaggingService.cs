@@ -220,13 +220,25 @@ namespace SortFoldersBySize.Services
 
         public Result CleanDesktopIniFromProgramTagInfo(string path)
         {
-            var desktopIniCurrentContent = _fileSystem.File.ReadAllLines(path);
-            var desktopIniOriginalContent = desktopIniCurrentContent.Where(x => x[0] == ';' && x != MagiGStrings.ForAppendedFiles)
-                                                                    .Select(x => x.Substring(1, x.Length - 1))
-                                                                    .ToArray();
-            _fileSystem.File.WriteAllLines(path, desktopIniOriginalContent);
+            try
+            {
+                var desktopIniCurrentContent = _fileSystem.File.ReadAllLines(path);
+                var desktopIniOriginalContent = desktopIniCurrentContent.Where(x => x[0] == ';' && x != MagiGStrings.ForAppendedFiles)
+                                                                        .Select(x => x.Substring(1, x.Length - 1))
+                                                                        .ToArray();
+                _fileSystem.File.WriteAllLines(path, desktopIniOriginalContent);
 
-            return Result.Ok();
+                return Result.Ok();
+            }
+            catch(FileNotFoundException exc)
+            {
+                return Result.Fail(exc.Message);
+            }
+            catch (UnauthorizedAccessException uae)
+            {
+                return Result.Fail(uae.Message);
+            }
+
 
         }
     }

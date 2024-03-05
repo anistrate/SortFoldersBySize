@@ -26,6 +26,7 @@ namespace SortFoldersBySize.Tests
         private const string existingDesktopIniPathCreatedBySystemAppendedByProgram4 = @"c:\\MyFolder20\desktop.ini";
         private const string fileToDelete1 = @"c:\\MyFolder21\desktop.ini";
         private const string pathTriedToDelete = @"c:\\MyFolder22\";
+        private const string existingDesktopIniPathCreatedBySystemAppendedByProgram5 = @"c:\\MyFolder23\desktop.ini";
 
         private const string existingPath1 = @"c:\\MyFolder1\\";
         private const string existingPath2 = @"c:\\MyFolder2\\MyFolder2\\MyFolder2\\MyFolder2";
@@ -46,6 +47,7 @@ namespace SortFoldersBySize.Tests
             var mockDesktopFileCreatedByProgramAppendedBySystem3 = Stubs.GetMockDesktopIniCreatedBySystemAfterBeingModified("0","0", "KB");
             var mockDesktopFileCreatedByProgramAppendedBySystem4 = Stubs.GetMockDesktopIniCreatedBySystemAfterBeingModified("2000","2", "KB");
             var mockFileToDelete1 = Stubs.GetMockDesktopIniFile(2000,MagiGStrings.ForCreatedFiles);
+            var mockFileToClean = Stubs.GetMockDesktopIniCreatedBySystemAfterBeingModified("2000", "2", "KB");
 
             _mockFileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -64,7 +66,8 @@ namespace SortFoldersBySize.Tests
                 {existingDesktopIniPathCreatedBySystemAppendedByProgram3, mockDesktopFileCreatedByProgramAppendedBySystem3},
                 {existingDesktopIniPathCreatedBySystemAppendedByProgram4, mockDesktopFileCreatedByProgramAppendedBySystem4},
                 {fileToDelete1, mockFileToDelete1},
-                {pathTriedToDelete, new MockDirectoryData() }
+                {pathTriedToDelete, new MockDirectoryData() },
+                {existingDesktopIniPathCreatedBySystemAppendedByProgram5, mockFileToClean }
             });
             _folderTaggingService = new FolderTaggingService(_mockFileSystem);
             
@@ -234,7 +237,6 @@ namespace SortFoldersBySize.Tests
             Assert.That(result.IsSuccess, Is.True);
         }
 
-
         [TestCase(nonExistingPath, "Could not find a part of the path 'c:\\\\MyFolder1\\\\NonExistentFolder\\\\desktop.ini'.")]
         [TestCase(@"c:\\NonExistingFolder\\", "Could not find a part of the path 'c:\\\\NonExistingFolder\\\\'.")]
         public void RemoveDesktopIniCreatedByProgram_Wrong_NonExistentPath(string path, string expectedErrorMessage)
@@ -244,12 +246,34 @@ namespace SortFoldersBySize.Tests
             Assert.That(result.Error, Is.EqualTo(expectedErrorMessage));
         }
 
-
         //check if delete(path) deletes all files from a path, if no specific file is specified. Sounds idiotic but better check
-        [TestCase()]
+        [TestCase(existingDesktopIniPathCreatedBySystemAppendedByProgram5)]
         public void CleanDesktopIniFromProgramTagInfo_Right(string path)
         {
+            var result = _folderTaggingService.CleanDesktopIniFromProgramTagInfo(path);
 
+            var actual = _mockFileSystem.GetFile(path).TextContents;
+            var expected = Stubs.GetMockDesktopIniCreatedBySystemBeforeBeingModified();
+
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [TestCase(nonExistingPath, "Could not find file 'c:\\\\MyFolder1\\\\NonExistentFolder\\\\desktop.ini'.")]
+        [TestCase(@"c:\\NonExistingFolder\\", "Could not find file 'c:\\\\NonExistingFolder\\\\'.")]
+        [TestCase(@"c:\\MyFolder1\\", "Access to the path 'c:\\\\MyFolder1\\\\' is denied.")]
+        public void CleanDesktopIniFromProgramTagInfo_NonExistingPath(string path, string expectedErrorMessage)
+        {
+            var result = _folderTaggingService.CleanDesktopIniFromProgramTagInfo(path);
+
+            Assert.That(result.IsSuccess, Is.False);
+            Assert.That(result.Error, Is.EqualTo(expectedErrorMessage));
+        }
+
+        [TestCase()]
+        public void CleanDesktopIniFromProgramTagInfo_NullPath()
+        {
+            Assert.Throws<ArgumentNullException>(() => _folderTaggingService.CleanDesktopIniFromProgramTagInfo(null));
         }
     }
 }
