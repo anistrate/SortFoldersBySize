@@ -38,3 +38,8 @@ https://docs.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notificatio
 https://learn.microsoft.com/en-us/windows/apps/publish/publish-your-app/app-certification-process?pivots=store-installer-msi-exe
 https://learn.microsoft.com/en-us/windows/win32/win_cert/certification-requirements-for-windows-desktop-apps
 https://www.microsoft.com/en-us/wdsi/filesubmission/
+
+#UX
+https://www.elevenforum.com/t/assign-shortcut-key-to-shortcut-in-windows-11.4837/#Four
+https://learn.microsoft.com/en-us/windows/powertoys/keyboard-manager
+
